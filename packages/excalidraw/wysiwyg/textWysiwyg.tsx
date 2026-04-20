@@ -402,7 +402,9 @@ export const textWysiwyg = ({
         caretColor:
           updatedTextElement.strokeColor === "transparent" //zsviczian
             ? "var(--excalidraw-caret-color)"
-            : updatedTextElement.strokeColor, //zsviczian Set caret color
+            : appState.theme === THEME.DARK
+              ? applyDarkModeFilter(updatedTextElement.strokeColor)
+              : updatedTextElement.strokeColor, //zsviczian Set caret color
       });
       currentTextLayout = {
         angle: angle as Radians,
