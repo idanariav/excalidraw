@@ -1,5 +1,5 @@
 {
-  "name": "@zsviczian/excalidraw",
+  "name": "@idan_ariav/excalidraw",
   "version": "0.18.0-90",
   "main": "main.js",
   "module": "./dist/prod/index.js",
@@ -162,7 +162,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zsviczian/excalidraw.git"
+    "url": "git+https://github.com/idanariav/excalidraw.git"
   },
   "scripts": {
     "gen:types": "rimraf ./types && tsc --project tsconfig-types.json",
