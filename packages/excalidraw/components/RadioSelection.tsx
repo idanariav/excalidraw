@@ -13,6 +13,7 @@ export const RadioSelection = <T extends Object>(
       testId?: string;
       /** if not supplied, defaults to value identity check */
       active?: boolean;
+      subtitle?: string;
     }[];
     value: T | null;
     type?: "radio" | "button";
@@ -37,6 +38,7 @@ export const RadioSelection = <T extends Object>(
           testId={option.testId}
           active={option.active ?? props.value === option.value}
           onClick={(event) => props.onClick(option.value, event)}
+          subtitle={option.subtitle}
         />
       ) : (
         <label
@@ -52,6 +54,9 @@ export const RadioSelection = <T extends Object>(
             data-testid={option.testId}
           />
           {option.icon}
+          {option.subtitle && (
+            <span className="button-icon-subtitle">{option.subtitle}</span>
+          )}
         </label>
       ),
     )}

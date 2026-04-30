@@ -84,6 +84,7 @@ import type { CaptureUpdateActionType } from "@excalidraw/element";
 
 import { trackEvent } from "../analytics";
 import { RadioSelection } from "../components/RadioSelection";
+import { ButtonIcon } from "../components/ButtonIcon";
 import { ColorPicker } from "../components/ColorPicker/ColorPicker";
 import { FontPicker } from "../components/FontPicker/FontPicker";
 import { IconPicker } from "../components/IconPicker";
@@ -113,6 +114,7 @@ import {
   FontSizeMediumIcon,
   FontSizeLargeIcon,
   FontSizeExtraLargeIcon,
+  pencilIcon,
   EdgeSharpIcon,
   EdgeRoundIcon,
   TextAlignLeftIcon,
@@ -571,6 +573,76 @@ export const actionChangeFillStyle = register<ExcalidrawElement["fillStyle"]>({
   },
 });
 
+// zsviczian - custom numeric input with up/down spinner buttons
+const CustomSizeInput = ({
+  min,
+  step,
+  defaultValue,
+  onCommit,
+  onClose,
+}: {
+  min: number;
+  step: number;
+  defaultValue: number;
+  onCommit: (val: number) => void;
+  onClose: () => void;
+}) => {
+  const [value, setValue] = useState(defaultValue);
+  const commit = (v: number) => {
+    if (v >= min) {
+      onCommit(v);
+      onClose();
+    }
+  };
+  return (
+    <div className="custom-size-input-wrapper"> {/* zsviczian */}
+      <input
+        type="number"
+        className="custom-size-input" //zsviczian
+        min={min}
+        step={step}
+        value={value}
+        autoFocus
+        onChange={(e) => setValue(Number(e.currentTarget.value))}
+        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+          if (e.key === "Enter") commit(value);
+          else if (e.key === "Escape") onClose();
+        }}
+        onBlur={() => {
+          if (value >= min) onCommit(value);
+          onClose();
+        }}
+      />
+      <div className="custom-size-spinners"> {/* zsviczian */}
+        <button
+          onMouseDown={(e: React.MouseEvent) => {
+            e.preventDefault(); // keep focus on input
+            const next = parseFloat((value + step).toFixed(10)); //zsviczian
+            setValue(next);
+            onCommit(next);
+          }}
+          title="Increase" //zsviczian
+        >
+          ▲
+        </button>
+        <button
+          onMouseDown={(e: React.MouseEvent) => {
+            e.preventDefault(); // keep focus on input
+            const next = parseFloat( //zsviczian
+              Math.max(min, value - step).toFixed(10),
+            );
+            setValue(next);
+            onCommit(next);
+          }}
+          title="Decrease" //zsviczian
+        >
+          ▼
+        </button>
+      </div>
+    </div>
+  );
+}; //zsviczian
+
 export const actionChangeStrokeWidth = register<
   ExcalidrawElement["strokeWidth"]
 >({
@@ -588,51 +660,82 @@ export const actionChangeStrokeWidth = register<
       captureUpdate: CaptureUpdateAction.IMMEDIATELY,
     };
   },
-  PanelComponent: ({ elements, appState, updateData, app, data }) => (
-    <fieldset>
-      <legend>{t("labels.strokeWidth")}</legend>
-      <div className="buttonList">
-        <RadioSelection
-          group="stroke-width"
-          options={[
-            {
-              //zsviczian
-              value: 0.5,
-              text: t("labels.extraThin"),
-              icon: StrokeWidthThinIcon,
-            },
-            {
-              value: STROKE_WIDTH.thin,
-              text: t("labels.thin"),
-              icon: StrokeWidthBaseIcon,
-              testId: "strokeWidth-thin",
-            },
-            {
-              value: STROKE_WIDTH.bold,
-              text: t("labels.bold"),
-              icon: StrokeWidthBoldIcon,
-              testId: "strokeWidth-bold",
-            },
-            {
-              value: STROKE_WIDTH.extraBold,
-              text: t("labels.extraBold"),
-              icon: StrokeWidthExtraBoldIcon,
-              testId: "strokeWidth-extraBold",
-            },
-          ]}
-          value={getFormValue(
-            elements,
-            app,
-            (element) => element.strokeWidth,
-            (element) => element.hasOwnProperty("strokeWidth"),
-            (hasSelection) =>
-              hasSelection ? null : appState.currentItemStrokeWidth,
-          )}
-          onChange={(value) => updateData(value)}
-        />
-      </div>
-    </fieldset>
-  ),
+  PanelComponent: ({ elements, appState, updateData, app, data }) => {
+    const STROKE_PRESETS = [0.5, STROKE_WIDTH.thin, STROKE_WIDTH.bold, STROKE_WIDTH.extraBold];
+    const currentValue = getFormValue(
+      elements,
+      app,
+      (element) => element.strokeWidth,
+      (element) => element.hasOwnProperty("strokeWidth"),
+      (hasSelection) =>
+        hasSelection ? null : appState.currentItemStrokeWidth,
+    );
+    const isCustom =
+      currentValue !== null && !STROKE_PRESETS.includes(currentValue);
+    const [showInput, setShowInput] = useState(isCustom);
+
+    return (
+      <fieldset>
+        <legend>{t("labels.strokeWidth")}</legend>
+        <div className="buttonList">
+          <RadioSelection
+            group="stroke-width"
+            options={[
+              {
+                //zsviczian
+                value: 0.5,
+                text: t("labels.extraThin"),
+                icon: StrokeWidthThinIcon,
+                subtitle: "0.5",
+              },
+              {
+                value: STROKE_WIDTH.thin,
+                text: t("labels.thin"),
+                icon: StrokeWidthBaseIcon,
+                testId: "strokeWidth-thin",
+                subtitle: "1",
+              },
+              {
+                value: STROKE_WIDTH.bold,
+                text: t("labels.bold"),
+                icon: StrokeWidthBoldIcon,
+                testId: "strokeWidth-bold",
+                subtitle: "2",
+              },
+              {
+                value: STROKE_WIDTH.extraBold,
+                text: t("labels.extraBold"),
+                icon: StrokeWidthExtraBoldIcon,
+                testId: "strokeWidth-extraBold",
+                subtitle: "4",
+              },
+            ]}
+            value={currentValue}
+            onChange={(value) => {
+              setShowInput(false);
+              updateData(value);
+            }}
+          />
+          <ButtonIcon
+            icon={pencilIcon}
+            title="Custom" //zsviczian
+            subtitle={isCustom && currentValue !== null ? String(currentValue) : "Custom"} //zsviczian
+            active={isCustom}
+            onClick={() => setShowInput((v: boolean) => !v)}
+          />
+        </div>
+        {showInput && ( //zsviczian
+          <CustomSizeInput //zsviczian
+            min={0.1}
+            step={0.5}
+            defaultValue={isCustom && currentValue !== null ? currentValue : 1}
+            onCommit={(val) => updateData(val)}
+            onClose={() => setShowInput(false)}
+          />
+        )}
+      </fieldset>
+    );
+  },
 });
 
 export const actionChangeSloppiness = register<ExcalidrawElement["roughness"]>({
@@ -969,9 +1072,11 @@ export const actionChangeFontSize = register<ExcalidrawTextElement["fontSize"]>(
       const isMedium = idx === 1;
       const isLarge = idx === 2;
       const isVeryLarge = idx === 3;
+      const isCustom = size !== undefined && idx === null; //zsviczian
       // zsviczian - end insert
 
       const { isCompact } = getStylesPanelInfo(app);
+      const [showFontSizeInput, setShowFontSizeInput] = useState(isCustom); //zsviczian
 
       return (
         <fieldset>
@@ -987,6 +1092,7 @@ export const actionChangeFontSize = register<ExcalidrawTextElement["fontSize"]>(
                   icon: FontSizeSmallIcon,
                   testId: "fontSize-small",
                   active: isSmall ? true : undefined, //zsviczian
+                  subtitle: String(FONT_SIZES.sm), //zsviczian
                 },
                 {
                   value: FONT_SIZES.md,
@@ -994,6 +1100,7 @@ export const actionChangeFontSize = register<ExcalidrawTextElement["fontSize"]>(
                   icon: FontSizeMediumIcon,
                   testId: "fontSize-medium",
                   active: isMedium ? true : undefined, //zsviczian
+                  subtitle: String(FONT_SIZES.md), //zsviczian
                 },
                 {
                   value: FONT_SIZES.lg,
@@ -1001,6 +1108,7 @@ export const actionChangeFontSize = register<ExcalidrawTextElement["fontSize"]>(
                   icon: FontSizeLargeIcon,
                   testId: "fontSize-large",
                   active: isLarge ? true : undefined, //zsviczian
+                  subtitle: String(FONT_SIZES.lg), //zsviczian
                 },
                 {
                   value: FONT_SIZES.xl,
@@ -1010,6 +1118,7 @@ export const actionChangeFontSize = register<ExcalidrawTextElement["fontSize"]>(
                   icon: FontSizeExtraLargeIcon,
                   testId: "fontSize-veryLarge",
                   active: isVeryLarge ? true : undefined, //zsviczian
+                  subtitle: String(FONT_SIZES.xl), //zsviczian
                 },
               ]}
               value={getFormValue(
@@ -1046,6 +1155,7 @@ export const actionChangeFontSize = register<ExcalidrawTextElement["fontSize"]>(
               ) => {
                 scaleFontSize = event.shiftKey;
                 useFibonacci = event.altKey;
+                setShowFontSizeInput(false); //zsviczian
                 withCaretPositionPreservation(
                   () => updateData(getFontSize(value, appState.zoom.value)),
                   isCompact,
@@ -1062,7 +1172,32 @@ export const actionChangeFontSize = register<ExcalidrawTextElement["fontSize"]>(
                 );
               }}*/ //zsviczian
             />
+            {/* zsviczian - custom font size button */}
+            <ButtonIcon
+              icon={pencilIcon}
+              title="Custom" //zsviczian
+              subtitle={isCustom && size ? String(size) : "Custom"} //zsviczian
+              active={isCustom}
+              onClick={() => setShowFontSizeInput((v: boolean) => !v)}
+            />
           </div>
+          {/* zsviczian - custom font size input */}
+          {showFontSizeInput && (
+            <CustomSizeInput //zsviczian
+              min={1}
+              step={1}
+              defaultValue={isCustom && size ? size : DEFAULT_FONT_SIZE}
+              onCommit={(val) =>
+                withCaretPositionPreservation(
+                  () => updateData(val),
+                  isCompact,
+                  !!appState.editingTextElement,
+                  data?.onPreventClose,
+                )
+              }
+              onClose={() => setShowFontSizeInput(false)}
+            />
+          )}
         </fieldset>
       );
     },

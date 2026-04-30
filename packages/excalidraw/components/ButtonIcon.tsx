@@ -16,6 +16,7 @@ interface ButtonIconProps {
   standalone?: boolean;
   onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   style?: React.CSSProperties;
+  subtitle?: string;
 }
 
 export const ButtonIcon = forwardRef<HTMLButtonElement, ButtonIconProps>(
@@ -34,6 +35,9 @@ export const ButtonIcon = forwardRef<HTMLButtonElement, ButtonIconProps>(
         style={props.style}
       >
         {icon}
+        {props.subtitle && (
+          <span className="button-icon-subtitle">{props.subtitle}</span>
+        )}
       </button>
     );
   },
