@@ -4,6 +4,7 @@ import {
   SelectionIcon,
   RectangleIcon,
   DiamondIcon,
+  TriangleIcon, //zsviczian
   EllipseIcon,
   ArrowIcon,
   LineIcon,
@@ -59,10 +60,18 @@ export const SHAPES = [
     toolbar: true,
   },
   {
+    icon: TriangleIcon, //zsviczian
+    value: "triangle", //zsviczian
+    key: KEYS.G, //zsviczian
+    numericKey: KEYS["5"], //zsviczian
+    fillable: true, //zsviczian
+    toolbar: true, //zsviczian
+  }, //zsviczian
+  {
     icon: ArrowIcon,
     value: "arrow",
     key: KEYS.A,
-    numericKey: KEYS["5"],
+    numericKey: KEYS["6"], //zsviczian
     fillable: true,
     toolbar: true,
   },
@@ -70,7 +79,7 @@ export const SHAPES = [
     icon: LineIcon,
     value: "line",
     key: KEYS.L,
-    numericKey: KEYS["6"],
+    numericKey: KEYS["7"], //zsviczian
     fillable: true,
     toolbar: true,
   },
@@ -78,7 +87,7 @@ export const SHAPES = [
     icon: FreedrawIcon,
     value: "freedraw",
     key: [KEYS.P, KEYS.X],
-    numericKey: KEYS["7"],
+    numericKey: KEYS["8"], //zsviczian
     fillable: false,
     toolbar: true,
   },
@@ -86,7 +95,7 @@ export const SHAPES = [
     icon: TextIcon,
     value: "text",
     key: KEYS.T,
-    numericKey: KEYS["8"],
+    numericKey: KEYS["9"], //zsviczian
     fillable: false,
     toolbar: true,
   },

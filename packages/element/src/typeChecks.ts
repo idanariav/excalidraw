@@ -29,6 +29,7 @@ import type {
   ExcalidrawLineElement,
   ExcalidrawFlowchartNodeElement,
   ExcalidrawLinearElementSubType,
+  ExcalidrawTriangleElement, //zsviczian
 } from "./types";
 
 export const isInitializedImageElement = (
@@ -174,6 +175,12 @@ export const isBindingElementType = (
   return elementType === "arrow";
 };
 
+export const isTriangleElement = ( //zsviczian
+  element?: ExcalidrawElement | null, //zsviczian
+): element is ExcalidrawTriangleElement => { //zsviczian
+  return !!element && element.type === "triangle"; //zsviczian
+}; //zsviczian
+
 export const isBindableElement = (
   element: ExcalidrawElement | null | undefined,
   includeLocked = true,
@@ -183,6 +190,7 @@ export const isBindableElement = (
     (!element.locked || includeLocked === true) &&
     (element.type === "rectangle" ||
       element.type === "diamond" ||
+      element.type === "triangle" || //zsviczian
       element.type === "ellipse" ||
       element.type === "image" ||
       element.type === "iframe" ||
@@ -236,6 +244,7 @@ export const isTextBindableContainer = (
     (!element.locked || includeLocked === true) &&
     (element.type === "rectangle" ||
       element.type === "diamond" ||
+      element.type === "triangle" || //zsviczian
       element.type === "ellipse" ||
       isArrowElement(element))
   );
@@ -251,6 +260,7 @@ export const isExcalidrawElement = (
   switch (type) {
     case "text":
     case "diamond":
+    case "triangle": //zsviczian
     case "rectangle":
     case "iframe":
     case "embeddable":
@@ -277,7 +287,8 @@ export const isFlowchartNodeElement = (
   return (
     element.type === "rectangle" ||
     element.type === "ellipse" ||
-    element.type === "diamond"
+    element.type === "diamond" ||
+    element.type === "triangle" //zsviczian
   );
 };
 
@@ -312,7 +323,7 @@ export const isUsingAdaptiveRadius = (type: string) =>
   type === "image";
 
 export const isUsingProportionalRadius = (type: string) =>
-  type === "line" || type === "arrow" || type === "diamond";
+  type === "line" || type === "arrow" || type === "diamond" || type === "triangle"; //zsviczian
 
 export const canApplyRoundnessTypeToElement = (
   roundnessType: RoundnessType,

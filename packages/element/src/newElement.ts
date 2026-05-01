@@ -45,6 +45,7 @@ import type {
   ExcalidrawEmbeddableElement,
   ExcalidrawEllipseElement, //zsviczian
   ExcalidrawRectangleElement, //zsviczian
+  ExcalidrawTriangleElement, //zsviczian
   ExcalidrawMagicFrameElement,
   ExcalidrawIframeElement,
   ElementsMap,
@@ -180,6 +181,21 @@ export const newRectangleElement = ( //zsviczian
   rectGapSide: opts.rectGapSide ?? null, //zsviczian
   rectGapSize: opts.rectGapSize ?? 1, //zsviczian
   rectGapDepth: opts.rectGapDepth ?? 0, //zsviczian
+}); //zsviczian
+
+export const newTriangleElement = ( //zsviczian
+  opts: { //zsviczian
+    type: "triangle"; //zsviczian
+    triGapVertex?: "top" | "bottom-left" | "bottom-right" | null; //zsviczian
+    triGapSize?: number; //zsviczian
+    triGapClosed?: boolean; //zsviczian
+  } & ElementConstructorOpts, //zsviczian
+): NonDeleted<ExcalidrawTriangleElement> => ({ //zsviczian
+  ..._newElementBase<ExcalidrawTriangleElement>("triangle", opts), //zsviczian
+  type: "triangle", //zsviczian
+  triGapVertex: opts.triGapVertex ?? null, //zsviczian
+  triGapSize: opts.triGapSize ?? 0.5, //zsviczian
+  triGapClosed: opts.triGapClosed ?? true, //zsviczian
 }); //zsviczian
 
 export const newEllipseElement = ( //zsviczian

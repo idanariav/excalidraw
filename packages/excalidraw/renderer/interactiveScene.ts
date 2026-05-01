@@ -24,6 +24,7 @@ import {
 import {
   deconstructDiamondElement,
   deconstructRectanguloidElement,
+  getTrianglePoints, //zsviczian
   elementCenterPoint,
   getDiamondBaseCorners,
   FOCUS_POINT_SIZE,
@@ -371,6 +372,16 @@ const renderBindingHighlightForBindableElement_simple = (
           }
 
           break;
+        case "triangle": { //zsviczian
+          const [apX, apY, brX, brY, blX, blY] = getTrianglePoints(suggestedBinding.element); //zsviczian
+          context.beginPath(); //zsviczian
+          context.moveTo(apX, apY); //zsviczian
+          context.lineTo(brX, brY); //zsviczian
+          context.lineTo(blX, blY); //zsviczian
+          context.closePath(); //zsviczian
+          context.stroke(); //zsviczian
+          break; //zsviczian
+        } //zsviczian
         default:
           {
             const [segments, curves] = deconstructRectanguloidElement(
@@ -721,6 +732,16 @@ const renderBindingHighlightForBindableElement_complex = (
           }
 
           break;
+        case "triangle": { //zsviczian
+          const [apX, apY, brX, brY, blX, blY] = getTrianglePoints(element); //zsviczian
+          context.beginPath(); //zsviczian
+          context.moveTo(apX + offset, apY + offset); //zsviczian
+          context.lineTo(brX + offset, brY - offset); //zsviczian
+          context.lineTo(blX - offset, blY - offset); //zsviczian
+          context.closePath(); //zsviczian
+          context.stroke(); //zsviczian
+          break; //zsviczian
+        } //zsviczian
         default:
           {
             const [segments, curves] = deconstructRectanguloidElement(

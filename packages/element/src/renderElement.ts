@@ -399,6 +399,7 @@ const drawElementOnCanvas = (
     case "iframe":
     case "embeddable":
     case "diamond":
+    case "triangle": //zsviczian
     case "ellipse": {
       context.lineJoin = "round";
       context.lineCap = "round";
@@ -935,6 +936,7 @@ export const renderElement = (
     }
     case "rectangle":
     case "diamond":
+    case "triangle": //zsviczian
     case "ellipse":
     case "line":
     case "arrow":

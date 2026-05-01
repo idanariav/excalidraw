@@ -537,6 +537,18 @@ export const getDiamondPoints = (element: ExcalidrawElement) => {
   return [topX, topY, rightX, rightY, bottomX, bottomY, leftX, leftY];
 };
 
+// Returns [apexX, apexY, bottomRightX, bottomRightY, bottomLeftX, bottomLeftY] //zsviczian
+export const getTrianglePoints = (element: ExcalidrawElement) => { //zsviczian
+  const { width: w, height: h } = element; //zsviczian
+  const apexX = Math.floor(w / 2) + 1; //zsviczian
+  const apexY = 0; //zsviczian
+  const bottomRightX = w; //zsviczian
+  const bottomRightY = h; //zsviczian
+  const bottomLeftX = 0; //zsviczian
+  const bottomLeftY = h; //zsviczian
+  return [apexX, apexY, bottomRightX, bottomRightY, bottomLeftX, bottomLeftY]; //zsviczian
+}; //zsviczian
+
 // reference: https://eliot-jones.com/2019/12/cubic-bezier-curve-bounding-boxes
 const getBezierValueForT = (
   t: number,

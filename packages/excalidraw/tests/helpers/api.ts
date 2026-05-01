@@ -9,6 +9,7 @@ import { DEFAULT_VERTICAL_ALIGN, ROUNDNESS, assertNever } from "@excalidraw/comm
 import {
   newArrowElement,
   newElement,
+  newTriangleElement, //zsviczian
   newEmbeddableElement,
   newFrameElement,
   newFreeDrawElement,
@@ -286,6 +287,9 @@ export class API {
           ...base,
         });
         break;
+      case "triangle": //zsviczian
+        element = newTriangleElement({ type: "triangle", ...base }); //zsviczian
+        break; //zsviczian
       case "embeddable":
         element = newEmbeddableElement({
           type: "embeddable",

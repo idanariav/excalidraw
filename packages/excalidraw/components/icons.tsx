@@ -342,6 +342,15 @@ export const RectangleIcon = createIcon(
   tablerIconProps,
 );
 
+// tabler-icons: triangle
+export const TriangleIcon = createIcon( //zsviczian
+  <g strokeWidth="1.5"> //zsviczian
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" /> //zsviczian
+    <path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.871l-8.106 -13.534a1.914 1.914 0 0 0 -3.274 0z" /> //zsviczian
+  </g>, //zsviczian
+  tablerIconProps, //zsviczian
+); //zsviczian
+
 // tabler-icons: square-rotated
 export const DiamondIcon = createIcon(
   <g strokeWidth="1.5">
@@ -2688,4 +2697,36 @@ export const RectGapRightIcon = createIcon(
     <path d="M16 4 L4 4 L4 20 L16 20" />
   </g>,
   tablerIconProps,
+); //zsviczian
+
+export const TriGapNoneIcon = createIcon( //zsviczian
+  <g strokeWidth="1.5"> //zsviczian
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" /> //zsviczian
+    <path d="M12 3 L21 20 L3 20 Z" /> //zsviczian
+  </g>, //zsviczian
+  tablerIconProps, //zsviczian
+); //zsviczian
+
+export const TriGapTopIcon = createIcon( //zsviczian
+  <g strokeWidth="1.5"> //zsviczian
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" /> //zsviczian
+    <path d="M8 11 L3 20 L21 20 L16 11" /> //zsviczian
+  </g>, //zsviczian
+  tablerIconProps, //zsviczian
+); //zsviczian
+
+export const TriGapBottomLeftIcon = createIcon( //zsviczian
+  <g strokeWidth="1.5"> //zsviczian
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" /> //zsviczian
+    <path d="M8.5 12.5 L12 3 L21 20 L11 20" /> //zsviczian
+  </g>, //zsviczian
+  tablerIconProps, //zsviczian
+); //zsviczian
+
+export const TriGapBottomRightIcon = createIcon( //zsviczian
+  <g strokeWidth="1.5"> //zsviczian
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" /> //zsviczian
+    <path d="M15.5 12.5 L12 3 L3 20 L13 20" /> //zsviczian
+  </g>, //zsviczian
+  tablerIconProps, //zsviczian
 ); //zsviczian

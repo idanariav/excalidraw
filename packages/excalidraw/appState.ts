@@ -49,6 +49,9 @@ export const getDefaultAppState = (): Omit<
     currentItemRectGapSide: null, //zsviczian
     currentItemRectGapSize: 1, //zsviczian
     currentItemRectGapDepth: 0, //zsviczian
+    currentItemTriGapVertex: null, //zsviczian
+    currentItemTriGapSize: 0.5, //zsviczian
+    currentItemTriGapClosed: true, //zsviczian
     cursorButton: "up",
     activeEmbeddable: null,
     newElement: null,
@@ -204,6 +207,9 @@ const APP_STATE_STORAGE_CONF = (<
   currentItemRectGapSide: { browser: true, export: false, server: false }, //zsviczian
   currentItemRectGapSize: { browser: true, export: false, server: false }, //zsviczian
   currentItemRectGapDepth: { browser: true, export: false, server: false }, //zsviczian
+  currentItemTriGapVertex: { browser: true, export: false, server: false }, //zsviczian
+  currentItemTriGapSize: { browser: true, export: false, server: false }, //zsviczian
+  currentItemTriGapClosed: { browser: true, export: false, server: false }, //zsviczian
   cursorButton: { browser: true, export: false, server: false },
   activeEmbeddable: { browser: false, export: false, server: false },
   newElement: { browser: false, export: false, server: false },

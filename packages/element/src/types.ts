@@ -97,6 +97,13 @@ export type ExcalidrawDiamondElement = _ExcalidrawElementBase & {
   type: "diamond";
 };
 
+export type ExcalidrawTriangleElement = _ExcalidrawElementBase & { //zsviczian
+  type: "triangle"; //zsviczian
+  triGapVertex?: "top" | "bottom-left" | "bottom-right" | null; //zsviczian
+  triGapSize?: number; // 0–1, parametric cut depth along adjacent edges //zsviczian
+  triGapClosed?: boolean; // true = bridge gap with line (trapezoid) //zsviczian
+}; //zsviczian
+
 export type ExcalidrawEllipseElement = _ExcalidrawElementBase & {
   type: "ellipse";
   arcGapAngle?: number; // gap size in radians (0 = full ellipse, up to ~2π) //zsviczian
@@ -211,11 +218,13 @@ export type ExcalidrawGenericElement =
   | ExcalidrawSelectionElement
   | ExcalidrawRectangleElement
   | ExcalidrawDiamondElement
+  | ExcalidrawTriangleElement //zsviczian
   | ExcalidrawEllipseElement;
 
 export type ExcalidrawFlowchartNodeElement =
   | ExcalidrawRectangleElement
   | ExcalidrawDiamondElement
+  | ExcalidrawTriangleElement //zsviczian
   | ExcalidrawEllipseElement;
 
 export type ExcalidrawRectanguloidElement =
@@ -290,6 +299,7 @@ export type ExcalidrawTextElement = _ExcalidrawElementBase &
 export type ExcalidrawBindableElement =
   | ExcalidrawRectangleElement
   | ExcalidrawDiamondElement
+  | ExcalidrawTriangleElement //zsviczian
   | ExcalidrawEllipseElement
   | ExcalidrawTextElement
   | ExcalidrawImageElement
@@ -301,6 +311,7 @@ export type ExcalidrawBindableElement =
 export type ExcalidrawTextContainer =
   | ExcalidrawRectangleElement
   | ExcalidrawDiamondElement
+  | ExcalidrawTriangleElement //zsviczian
   | ExcalidrawEllipseElement
   | ExcalidrawArrowElement;
 
@@ -474,6 +485,6 @@ export type ExcalidrawLinearElementSubType =
   | "curvedArrow"
   | "elbowArrow";
 
-export type ConvertibleGenericTypes = "rectangle" | "diamond" | "ellipse";
+export type ConvertibleGenericTypes = "rectangle" | "diamond" | "triangle" | "ellipse"; //zsviczian
 export type ConvertibleLinearTypes = ExcalidrawLinearElementSubType;
 export type ConvertibleTypes = ConvertibleGenericTypes | ConvertibleLinearTypes;

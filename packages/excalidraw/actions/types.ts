@@ -143,6 +143,9 @@ export type ActionName =
   | "changeRectGapSide" //zsviczian
   | "changeRectGapSize" //zsviczian
   | "changeRectGapDepth" //zsviczian
+  | "changeTriGapVertex" //zsviczian
+  | "changeTriGapSize" //zsviczian
+  | "changeTriGapClosed" //zsviczian
   | "commandPalette"
   | "autoResize"
   | "elementStats"

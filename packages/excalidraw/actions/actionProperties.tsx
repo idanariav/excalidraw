@@ -72,6 +72,7 @@ import type {
   ExcalidrawElement,
   ExcalidrawEllipseElement, //zsviczian
   ExcalidrawRectangleElement, //zsviczian
+  ExcalidrawTriangleElement, //zsviczian
   ExcalidrawLinearElement,
   ExcalidrawTextElement,
   ExcalidrawFrameElement,
@@ -148,6 +149,10 @@ import {
   RectGapBottomIcon, //zsviczian
   RectGapLeftIcon, //zsviczian
   RectGapRightIcon, //zsviczian
+  TriGapNoneIcon, //zsviczian
+  TriGapTopIcon, //zsviczian
+  TriGapBottomLeftIcon, //zsviczian
+  TriGapBottomRightIcon, //zsviczian
 } from "../components/icons";
 
 import { Fonts } from "../fonts";
@@ -1151,6 +1156,152 @@ export const actionChangeRectGapDepth = register<number>({ //zsviczian
           onChange={(v) => updateData(v / 100)}
           testId="rectGapDepth"
         />
+      </fieldset>
+    );
+  }, //zsviczian
+}); //zsviczian
+
+export const actionChangeTriGapVertex = register<"top" | "bottom-left" | "bottom-right" | null>({ //zsviczian
+  name: "changeTriGapVertex", //zsviczian
+  label: "labels.triGapVertex", //zsviczian
+  trackEvent: false, //zsviczian
+  perform: (elements, appState, value) => { //zsviczian
+    return { //zsviczian
+      elements: changeProperty(elements, appState, (el) => { //zsviczian
+        if (el.type !== "triangle") { return el; } //zsviczian
+        return newElementWith(el as ExcalidrawTriangleElement, { triGapVertex: value }); //zsviczian
+      }), //zsviczian
+      appState: { ...appState, currentItemTriGapVertex: value }, //zsviczian
+      captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+    }; //zsviczian
+  }, //zsviczian
+  PanelComponent: ({ elements, appState, app, updateData }) => { //zsviczian
+    const targetElements = getTargetElements(getNonDeletedElements(elements), appState); //zsviczian
+    const hasTri = targetElements.some((el) => el.type === "triangle") || appState.activeTool.type === "triangle"; //zsviczian
+    if (!hasTri) { return null; } //zsviczian
+    const triGapVertex = getFormValue( //zsviczian
+      elements, //zsviczian
+      app, //zsviczian
+      (el) => el.type === "triangle" ? ((el as ExcalidrawTriangleElement).triGapVertex ?? null) : null, //zsviczian
+      (el) => el.type === "triangle", //zsviczian
+      (hasSelection) => hasSelection ? null : appState.currentItemTriGapVertex, //zsviczian
+    ); //zsviczian
+    const vertices = [ //zsviczian
+      { value: null, icon: TriGapNoneIcon, label: t("labels.triGapNone") }, //zsviczian
+      { value: "top", icon: TriGapTopIcon, label: t("labels.triGapTop") }, //zsviczian
+      { value: "bottom-left", icon: TriGapBottomLeftIcon, label: t("labels.triGapBottomLeft") }, //zsviczian
+      { value: "bottom-right", icon: TriGapBottomRightIcon, label: t("labels.triGapBottomRight") }, //zsviczian
+    ]; //zsviczian
+    return (
+      <fieldset>
+        <legend>{t("labels.triGapVertex")}</legend>
+        <div className="buttonList">
+          {vertices.map((v) => (
+            <ButtonIcon
+              key={String(v.value)}
+              icon={v.icon}
+              title={v.label}
+              active={triGapVertex === v.value}
+              onClick={() => updateData(v.value)}
+            />
+          ))}
+        </div>
+      </fieldset>
+    );
+  }, //zsviczian
+}); //zsviczian
+
+export const actionChangeTriGapSize = register<number>({ //zsviczian
+  name: "changeTriGapSize", //zsviczian
+  label: "labels.triGapSize", //zsviczian
+  trackEvent: false, //zsviczian
+  perform: (elements, appState, value) => { //zsviczian
+    return { //zsviczian
+      elements: changeProperty(elements, appState, (el) => { //zsviczian
+        if (el.type !== "triangle") { return el; } //zsviczian
+        return newElementWith(el as ExcalidrawTriangleElement, { triGapSize: value }); //zsviczian
+      }), //zsviczian
+      appState: { ...appState, currentItemTriGapSize: value }, //zsviczian
+      captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+    }; //zsviczian
+  }, //zsviczian
+  PanelComponent: ({ elements, appState, app, updateData }) => { //zsviczian
+    const targetElements = getTargetElements(getNonDeletedElements(elements), appState); //zsviczian
+    const hasTriWithGap = targetElements.some( //zsviczian
+      (el) => el.type === "triangle" && (el as ExcalidrawTriangleElement).triGapVertex != null, //zsviczian
+    ); //zsviczian
+    if (!hasTriWithGap) { return null; } //zsviczian
+    const triGapSize = getFormValue( //zsviczian
+      elements, //zsviczian
+      app, //zsviczian
+      (el) => el.type === "triangle" && (el as ExcalidrawTriangleElement).triGapVertex != null //zsviczian
+        ? ((el as ExcalidrawTriangleElement).triGapSize ?? 0.5) //zsviczian
+        : null, //zsviczian
+      (el) => el.type === "triangle" && (el as ExcalidrawTriangleElement).triGapVertex != null, //zsviczian
+      (hasSelection) => hasSelection ? null : appState.currentItemTriGapSize, //zsviczian
+    ); //zsviczian
+    const pct = Math.round((triGapSize ?? 0.5) * 100); //zsviczian
+    return (
+      <fieldset>
+        <legend>{t("labels.triGapSize")}</legend>
+        <Range
+          label=""
+          min={1}
+          max={100}
+          step={1}
+          value={pct}
+          hasCommonValue={triGapSize !== null}
+          onChange={(v) => updateData(v / 100)}
+          testId="triGapSize"
+        />
+      </fieldset>
+    );
+  }, //zsviczian
+}); //zsviczian
+
+export const actionChangeTriGapClosed = register<boolean>({ //zsviczian
+  name: "changeTriGapClosed", //zsviczian
+  label: "labels.triGapClosed", //zsviczian
+  trackEvent: false, //zsviczian
+  perform: (elements, appState, value) => { //zsviczian
+    return { //zsviczian
+      elements: changeProperty(elements, appState, (el) => { //zsviczian
+        if (el.type !== "triangle") { return el; } //zsviczian
+        return newElementWith(el as ExcalidrawTriangleElement, { triGapClosed: value }); //zsviczian
+      }), //zsviczian
+      appState: { ...appState, currentItemTriGapClosed: value }, //zsviczian
+      captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+    }; //zsviczian
+  }, //zsviczian
+  PanelComponent: ({ elements, appState, app, updateData }) => { //zsviczian
+    const targetElements = getTargetElements(getNonDeletedElements(elements), appState); //zsviczian
+    const hasTriWithGap = targetElements.some( //zsviczian
+      (el) => el.type === "triangle" && (el as ExcalidrawTriangleElement).triGapVertex != null, //zsviczian
+    ); //zsviczian
+    if (!hasTriWithGap) { return null; } //zsviczian
+    const triGapClosed = getFormValue( //zsviczian
+      elements, //zsviczian
+      app, //zsviczian
+      (el) => el.type === "triangle" && (el as ExcalidrawTriangleElement).triGapVertex != null //zsviczian
+        ? ((el as ExcalidrawTriangleElement).triGapClosed ?? true) //zsviczian
+        : null, //zsviczian
+      (el) => el.type === "triangle" && (el as ExcalidrawTriangleElement).triGapVertex != null, //zsviczian
+      (hasSelection) => hasSelection ? null : appState.currentItemTriGapClosed, //zsviczian
+    ); //zsviczian
+    return (
+      <fieldset>
+        <legend>{t("labels.triGapClosed")}</legend>
+        <div className="buttonList">
+          <RadioSelection
+            group="triGapClosed"
+            options={[
+              { value: false, text: t("labels.triGapOpen"), icon: ArcOpenIcon }, //zsviczian
+              { value: true, text: t("labels.triGapClosedLabel"), icon: ArcClosedIcon }, //zsviczian
+            ]}
+            value={triGapClosed ?? true}
+            onChange={(value) => updateData(value)}
+          />
+        </div>
       </fieldset>
     );
   }, //zsviczian

@@ -249,6 +249,16 @@ export const SelectedShapeActions = ({
         </>
       )}
 
+      {/* //zsviczian: tri gap controls for triangles */}
+      {(appState.activeTool.type === "triangle" ||
+        targetElements.some((el) => el.type === "triangle")) && (
+        <>
+          {renderAction("changeTriGapVertex")}
+          {renderAction("changeTriGapSize")}
+          {renderAction("changeTriGapClosed")}
+        </>
+      )}
+
       {(toolIsArrow(appState.activeTool.type) ||
         targetElements.some((element) => toolIsArrow(element.type))) && (
         <>{renderAction("changeArrowType")}</>

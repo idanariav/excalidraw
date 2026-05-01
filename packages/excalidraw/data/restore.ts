@@ -108,6 +108,7 @@ export const AllowedExcalidrawActiveTools: Record<
   rectangle: true,
   diamond: true,
   ellipse: true,
+  triangle: true, //zsviczian
   line: true,
   image: true,
   arrow: true,
@@ -573,6 +574,12 @@ export const restoreElement = (
       });
     case "diamond":
       return restoreElementWithProperties(element, {});
+    case "triangle": //zsviczian
+      return restoreElementWithProperties(element, { //zsviczian
+        triGapVertex: element.triGapVertex ?? null, //zsviczian
+        triGapSize: element.triGapSize ?? 0.5, //zsviczian
+        triGapClosed: element.triGapClosed ?? true, //zsviczian
+      }); //zsviczian
     case "iframe": //zsviczian
     case "embeddable":
       return restoreElementWithProperties(element, {

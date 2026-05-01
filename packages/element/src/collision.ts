@@ -34,6 +34,7 @@ import {
   getCenterForBounds,
   getCubicBezierCurveBound,
   getDiamondPoints,
+  getTrianglePoints, //zsviczian
   getElementBounds,
   pointInsideBounds,
 } from "./bounds";
@@ -71,6 +72,7 @@ import type {
   ExcalidrawFreeDrawElement,
   ExcalidrawLinearElement,
   ExcalidrawRectanguloidElement,
+  ExcalidrawTriangleElement, //zsviczian
   NonDeleted,
   NonDeletedExcalidrawElement,
   NonDeletedSceneElementsMap,
@@ -466,6 +468,14 @@ export const intersectElementWithLineSegment = (
         offset,
         onlyFirst,
       );
+    case "triangle": //zsviczian
+      return intersectTriangleWithLineSegment( //zsviczian
+        element, //zsviczian
+        elementsMap, //zsviczian
+        line, //zsviczian
+        offset, //zsviczian
+        onlyFirst, //zsviczian
+      ); //zsviczian
     case "ellipse":
       return intersectEllipseWithLineSegment(
         element,
@@ -701,6 +711,31 @@ const intersectDiamondWithLineSegment = (
 
   return intersections;
 };
+
+const intersectTriangleWithLineSegment = ( //zsviczian
+  element: ExcalidrawTriangleElement, //zsviczian
+  elementsMap: ElementsMap, //zsviczian
+  l: LineSegment<GlobalPoint>, //zsviczian
+  offset: number = 0, //zsviczian
+  onlyFirst = false, //zsviczian
+): GlobalPoint[] => { //zsviczian
+  const center = elementCenterPoint(element, elementsMap); //zsviczian
+  const rotatedA = pointRotateRads(l[0], center, -element.angle as Radians); //zsviczian
+  const rotatedB = pointRotateRads(l[1], center, -element.angle as Radians); //zsviczian
+  const rotatedIntersector = lineSegment(rotatedA, rotatedB); //zsviczian
+  const [apexX, apexY, brX, brY, blX, blY] = getTrianglePoints(element); //zsviczian
+  const apex = pointFrom<GlobalPoint>(element.x + apexX, element.y + apexY); //zsviczian
+  const br = pointFrom<GlobalPoint>(element.x + brX, element.y + brY); //zsviczian
+  const bl = pointFrom<GlobalPoint>(element.x + blX, element.y + blY); //zsviczian
+  const sides: LineSegment<GlobalPoint>[] = [ //zsviczian
+    lineSegment(apex, br), //zsviczian
+    lineSegment(br, bl), //zsviczian
+    lineSegment(bl, apex), //zsviczian
+  ]; //zsviczian
+  const intersections: GlobalPoint[] = []; //zsviczian
+  lineIntersections(sides, rotatedIntersector, intersections, center, element.angle, onlyFirst); //zsviczian
+  return intersections; //zsviczian
+}; //zsviczian
 
 /**
  *

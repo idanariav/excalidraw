@@ -130,6 +130,7 @@ import {
   newEmbeddableElement,
   newEllipseElement, //zsviczian
   newRectangleElement, //zsviczian
+  newTriangleElement, //zsviczian
   newMagicFrameElement,
   newIframeElement,
   newArrowElement,
@@ -10109,6 +10110,7 @@ class App extends React.Component<AppProps, AppState> {
       | "selection"
       | "rectangle"
       | "diamond"
+      | "triangle" //zsviczian
       | "ellipse"
       | "iframe"
       | "embeddable",
@@ -10174,6 +10176,14 @@ class App extends React.Component<AppProps, AppState> {
         rectGapSide: this.state.currentItemRectGapSide, //zsviczian
         rectGapSize: this.state.currentItemRectGapSize, //zsviczian
         rectGapDepth: this.state.currentItemRectGapDepth, //zsviczian
+      }); //zsviczian
+    } else if (elementType === "triangle") { //zsviczian
+      element = newTriangleElement({ //zsviczian
+        type: "triangle", //zsviczian
+        ...baseElementAttributes, //zsviczian
+        triGapVertex: this.state.currentItemTriGapVertex, //zsviczian
+        triGapSize: this.state.currentItemTriGapSize, //zsviczian
+        triGapClosed: this.state.currentItemTriGapClosed, //zsviczian
       }); //zsviczian
     } else {
       element = newElement({

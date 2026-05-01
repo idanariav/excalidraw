@@ -43,6 +43,8 @@ export const distanceToElement = (
       return distanceToRectanguloidElement(element, elementsMap, p);
     case "diamond":
       return distanceToDiamondElement(element, elementsMap, p);
+    case "triangle": //zsviczian
+      return distanceToRectanguloidElement(element as unknown as ExcalidrawRectanguloidElement, elementsMap, p); //zsviczian
     case "ellipse":
       return distanceToEllipseElement(element, elementsMap, p);
     case "line":

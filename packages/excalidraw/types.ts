@@ -146,6 +146,7 @@ export type ToolType =
   | "lasso"
   | "rectangle"
   | "diamond"
+  | "triangle" //zsviczian
   | "ellipse"
   | "arrow"
   | "line"
@@ -393,6 +394,9 @@ export interface AppState {
   currentItemRectGapSide: "top" | "bottom" | "left" | "right" | null; //zsviczian
   currentItemRectGapSize: number; //zsviczian
   currentItemRectGapDepth: number; //zsviczian
+  currentItemTriGapVertex: "top" | "bottom-left" | "bottom-right" | null; //zsviczian
+  currentItemTriGapSize: number; //zsviczian
+  currentItemTriGapClosed: boolean; //zsviczian
   viewBackgroundColor: string;
   scrollX: number;
   scrollY: number;

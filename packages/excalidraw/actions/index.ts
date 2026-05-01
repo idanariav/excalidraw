@@ -24,6 +24,9 @@ export {
   actionChangeRectGapSide, //zsviczian
   actionChangeRectGapSize, //zsviczian
   actionChangeRectGapDepth, //zsviczian
+  actionChangeTriGapVertex, //zsviczian
+  actionChangeTriGapSize, //zsviczian
+  actionChangeTriGapClosed, //zsviczian
 } from "./actionProperties";
 
 export {

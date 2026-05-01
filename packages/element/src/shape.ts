@@ -15,6 +15,7 @@ import {
   pointDistance,
   type LocalPoint,
   pointRotateRads,
+  polygon, //zsviczian
 } from "@excalidraw/math";
 import {
   ROUGHNESS,
@@ -60,6 +61,7 @@ import {
   elementCenterPoint,
   getArrowheadPoints,
   getDiamondPoints,
+  getTrianglePoints, //zsviczian
   getElementAbsoluteCoords,
 } from "./bounds";
 import { shouldTestInside } from "./collision";
@@ -74,6 +76,7 @@ import type {
   ExcalidrawLineElement,
   ExcalidrawEllipseElement, //zsviczian
   ExcalidrawRectangleElement, //zsviczian
+  ExcalidrawTriangleElement, //zsviczian
   Arrowhead,
 } from "./types";
 
@@ -238,6 +241,7 @@ export const generateRoughOptions = (
     case "iframe":
     case "embeddable":
     case "diamond":
+    case "triangle": //zsviczian
     case "ellipse": {
       options.fillStyle = element.fillStyle;
       options.fill = isTransparent(element.backgroundColor)
@@ -927,6 +931,52 @@ const _generateElementShape = (
       }
       return shape;
     }
+    case "triangle": { //zsviczian
+      const triEl = element as ExcalidrawTriangleElement; //zsviczian
+      const triGapVertex = triEl.triGapVertex ?? null; //zsviczian
+      const triGapSize = triEl.triGapSize ?? 0.5; //zsviczian
+      const triGapClosed = triEl.triGapClosed ?? true; //zsviczian
+      const { width: w, height: h } = element; //zsviczian
+      const [apexX, apexY, brX, brY, blX, blY] = getTrianglePoints(element); //zsviczian
+      if (triGapVertex != null && triGapSize > 0) { //zsviczian
+        const t = Math.min(triGapSize, 1); //zsviczian
+        const opts = generateRoughOptions(element, true, isDarkMode); //zsviczian
+        if (!triGapClosed) { //zsviczian
+          opts.fill = undefined; //zsviczian
+          opts.fillStyle = undefined; //zsviczian
+        } //zsviczian
+        let path: string; //zsviczian
+        if (triGapVertex === "top") { //zsviczian
+          // cut along left and right edges from apex; horizontal cut at height h*t //zsviczian
+          const lcX = (w / 2) * (1 - t); const lcY = h * t; //zsviczian
+          const rcX = (w / 2) * (1 + t); const rcY = h * t; //zsviczian
+          path = triGapClosed //zsviczian
+            ? `M ${lcX} ${lcY} L ${blX} ${blY} L ${brX} ${brY} L ${rcX} ${rcY} Z` //zsviczian
+            : `M ${lcX} ${lcY} L ${blX} ${blY} L ${brX} ${brY} L ${rcX} ${rcY}`; //zsviczian
+        } else if (triGapVertex === "bottom-left") { //zsviczian
+          // cut along left edge from bottom-left toward apex, and along base from bottom-left toward bottom-right //zsviczian
+          const lcX = (w / 2) * t; const lcY = h * (1 - t); //zsviczian
+          const bcX = w * t; const bcY = h; //zsviczian
+          path = triGapClosed //zsviczian
+            ? `M ${lcX} ${lcY} L ${apexX} ${apexY} L ${brX} ${brY} L ${bcX} ${bcY} Z` //zsviczian
+            : `M ${lcX} ${lcY} L ${apexX} ${apexY} L ${brX} ${brY} L ${bcX} ${bcY}`; //zsviczian
+        } else { //zsviczian
+          // bottom-right: cut along right edge from bottom-right toward apex, and along base from bottom-right toward bottom-left //zsviczian
+          const rcX = w - (w / 2) * t; const rcY = h * (1 - t); //zsviczian
+          const bcX = w * (1 - t); const bcY = h; //zsviczian
+          path = triGapClosed //zsviczian
+            ? `M ${apexX} ${apexY} L ${blX} ${blY} L ${bcX} ${bcY} L ${rcX} ${rcY} Z` //zsviczian
+            : `M ${rcX} ${rcY} L ${apexX} ${apexY} L ${blX} ${blY} L ${bcX} ${bcY}`; //zsviczian
+        } //zsviczian
+        return generator.path(path, opts) as ElementShapes[typeof element.type]; //zsviczian
+      } //zsviczian
+      // plain triangle (no gap) //zsviczian
+      const shape: ElementShapes[typeof element.type] = generator.polygon( //zsviczian
+        [[apexX, apexY], [brX, brY], [blX, blY]], //zsviczian
+        generateRoughOptions(element, false, isDarkMode), //zsviczian
+      ); //zsviczian
+      return shape; //zsviczian
+    } //zsviczian
     case "ellipse": {
       const arcGap = (element as ExcalidrawEllipseElement).arcGapAngle ?? 0; //zsviczian
       if (arcGap > 0) { //zsviczian
@@ -1188,6 +1238,21 @@ export const getElementShape = <Point extends GlobalPoint | LocalPoint>(
             pointFrom(cx, cy),
           );
     }
+
+    case "triangle": { //zsviczian
+      const { x, y, width: w, height: h, angle } = element; //zsviczian
+      const cx = x + w / 2; //zsviczian
+      const cy = y + h / 2; //zsviczian
+      const center: Point = pointFrom(cx, cy); //zsviczian
+      return { //zsviczian
+        type: "polygon", //zsviczian
+        data: polygon( //zsviczian
+          pointRotateRads(pointFrom<Point>(x + w / 2, y), center, angle), //zsviczian
+          pointRotateRads(pointFrom<Point>(x + w, y + h), center, angle), //zsviczian
+          pointRotateRads(pointFrom<Point>(x, y + h), center, angle), //zsviczian
+        ), //zsviczian
+      }; //zsviczian
+    } //zsviczian
 
     case "ellipse":
       return getEllipseShape(element);
