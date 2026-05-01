@@ -146,6 +146,9 @@ export type ActionName =
   | "changeTriGapVertex" //zsviczian
   | "changeTriGapSize" //zsviczian
   | "changeTriGapClosed" //zsviczian
+  | "changeTextOutlineColor" //zsviczian
+  | "changeTextOutlineWidth" //zsviczian
+  | "changeTextOutlineOpacity" //zsviczian
   | "commandPalette"
   | "autoResize"
   | "elementStats"

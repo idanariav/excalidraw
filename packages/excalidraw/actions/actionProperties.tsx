@@ -1593,7 +1593,7 @@ export const actionChangeFontSize = register<ExcalidrawTextElement["fontSize"]>(
             <ButtonIcon
               icon={pencilIcon}
               title="Custom" //zsviczian
-              subtitle={isCustom && size ? String(size) : "Custom"} //zsviczian
+              subtitle={isCustom && size ? String(Math.round(size * 2) / 2) : "Custom"} //zsviczian
               active={isCustom}
               onClick={() => setShowFontSizeInput((v: boolean) => !v)}
             />
@@ -2902,3 +2902,151 @@ export const actionToggleFrameRole = register({
     );
   },
 });
+
+export const actionChangeTextOutlineColor = register< //zsviczian
+  Pick<AppState, "currentItemTextOutlineColor"> //zsviczian
+>({ //zsviczian
+  name: "changeTextOutlineColor", //zsviczian
+  label: "labels.textOutlineColor", //zsviczian
+  trackEvent: false, //zsviczian
+  perform: (elements, appState, value) => { //zsviczian
+    return { //zsviczian
+      ...(value?.currentItemTextOutlineColor && { //zsviczian
+        elements: changeProperty( //zsviczian
+          elements, //zsviczian
+          appState, //zsviczian
+          (el) => { //zsviczian
+            if (!isTextElement(el)) { return el; } //zsviczian
+            return newElementWith(el, { textOutlineColor: value.currentItemTextOutlineColor }); //zsviczian
+          }, //zsviczian
+          true, //zsviczian
+        ), //zsviczian
+      }), //zsviczian
+      appState: { ...appState, ...value }, //zsviczian
+      captureUpdate: value?.currentItemTextOutlineColor //zsviczian
+        ? CaptureUpdateAction.IMMEDIATELY //zsviczian
+        : CaptureUpdateAction.EVENTUALLY, //zsviczian
+    }; //zsviczian
+  }, //zsviczian
+  PanelComponent: ({ elements, appState, updateData, app }) => ( //zsviczian
+    <>
+      {isFullPanelMode(app) && ( //zsviczian
+        <h3 aria-hidden="true">{t("labels.textOutlineColor")}</h3>
+      )}
+      <ColorPicker //zsviczian
+        topPicks={ //zsviczian
+          appState.colorPalette?.topPicks?.elementStroke ?? //zsviczian
+          DEFAULT_ELEMENT_STROKE_PICKS //zsviczian
+        } //zsviczian
+        palette={ //zsviczian
+          appState.colorPalette?.elementStroke ?? //zsviczian
+          DEFAULT_ELEMENT_STROKE_COLOR_PALETTE //zsviczian
+        } //zsviczian
+        type="elementStroke" //zsviczian
+        label={t("labels.textOutlineColor")} //zsviczian
+        color={getFormValue( //zsviczian
+          elements, //zsviczian
+          app, //zsviczian
+          (element) => isTextElement(element) ? element.textOutlineColor : null, //zsviczian
+          true, //zsviczian
+          (hasSelection) => //zsviczian
+            !hasSelection ? appState.currentItemTextOutlineColor : null, //zsviczian
+        )} //zsviczian
+        onChange={(color) => updateData({ currentItemTextOutlineColor: color })} //zsviczian
+        elements={elements} //zsviczian
+        appState={appState} //zsviczian
+        updateData={updateData} //zsviczian
+      />
+    </>
+  ), //zsviczian
+}); //zsviczian
+
+export const actionChangeTextOutlineWidth = register<number>({ //zsviczian
+  name: "changeTextOutlineWidth", //zsviczian
+  label: "labels.textOutlineWidth", //zsviczian
+  trackEvent: false, //zsviczian
+  perform: (elements, appState, value) => { //zsviczian
+    return { //zsviczian
+      elements: changeProperty( //zsviczian
+        elements, //zsviczian
+        appState, //zsviczian
+        (el) => { //zsviczian
+          if (!isTextElement(el)) { return el; } //zsviczian
+          return newElementWith(el, { textOutlineWidth: value }); //zsviczian
+        }, //zsviczian
+        true, //zsviczian
+      ), //zsviczian
+      appState: { ...appState, currentItemTextOutlineWidth: value }, //zsviczian
+      captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+    }; //zsviczian
+  }, //zsviczian
+  PanelComponent: ({ elements, appState, updateData, app }) => { //zsviczian
+    const currentValue = getFormValue( //zsviczian
+      elements, //zsviczian
+      app, //zsviczian
+      (element) => isTextElement(element) ? element.textOutlineWidth : null, //zsviczian
+      true, //zsviczian
+      (hasSelection) => hasSelection ? null : appState.currentItemTextOutlineWidth, //zsviczian
+    ); //zsviczian
+    return (
+      <fieldset>
+        <legend>{t("labels.textOutlineWidth")}</legend>
+        <div className="buttonList">
+          <RadioSelection //zsviczian
+            group="text-outline-width" //zsviczian
+            options={[ //zsviczian
+              { value: 0, text: t("labels.none"), icon: StrokeWidthThinIcon, subtitle: "0" }, //zsviczian
+              { value: 1, text: t("labels.thin"), icon: StrokeWidthBaseIcon, subtitle: "1" }, //zsviczian
+              { value: 2, text: t("labels.bold"), icon: StrokeWidthBoldIcon, subtitle: "2" }, //zsviczian
+              { value: 4, text: t("labels.extraBold"), icon: StrokeWidthExtraBoldIcon, subtitle: "4" }, //zsviczian
+            ]} //zsviczian
+            value={currentValue} //zsviczian
+            onChange={updateData} //zsviczian
+          />
+        </div>
+      </fieldset>
+    ); //zsviczian
+  }, //zsviczian
+}); //zsviczian
+
+export const actionChangeTextOutlineOpacity = register<number>({ //zsviczian
+  name: "changeTextOutlineOpacity", //zsviczian
+  label: "labels.textOutlineOpacity", //zsviczian
+  trackEvent: false, //zsviczian
+  perform: (elements, appState, value) => { //zsviczian
+    return { //zsviczian
+      elements: changeProperty( //zsviczian
+        elements, //zsviczian
+        appState, //zsviczian
+        (el) => { //zsviczian
+          if (!isTextElement(el)) { return el; } //zsviczian
+          return newElementWith(el, { textOutlineOpacity: value }); //zsviczian
+        }, //zsviczian
+        true, //zsviczian
+      ), //zsviczian
+      appState: { ...appState, currentItemTextOutlineOpacity: value }, //zsviczian
+      captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+    }; //zsviczian
+  }, //zsviczian
+  PanelComponent: ({ elements, appState, updateData, app }) => { //zsviczian
+    const opacity = getFormValue( //zsviczian
+      elements, //zsviczian
+      app, //zsviczian
+      (element) => isTextElement(element) ? element.textOutlineOpacity : null, //zsviczian
+      true, //zsviczian
+      (hasSelection) => hasSelection ? null : appState.currentItemTextOutlineOpacity, //zsviczian
+    ); //zsviczian
+    return ( //zsviczian
+      <Range //zsviczian
+        label={t("labels.textOutlineOpacity")} //zsviczian
+        value={opacity ?? appState.currentItemTextOutlineOpacity} //zsviczian
+        hasCommonValue={opacity !== null} //zsviczian
+        onChange={updateData} //zsviczian
+        min={0} //zsviczian
+        max={100} //zsviczian
+        step={10} //zsviczian
+        testId="text-outline-opacity" //zsviczian
+      /> //zsviczian
+    ); //zsviczian
+  }, //zsviczian
+}); //zsviczian

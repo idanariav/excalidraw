@@ -383,6 +383,9 @@ export interface AppState {
   currentItemFontFamily: FontFamilyValues;
   currentItemFontSize: number;
   currentItemTextAlign: TextAlign;
+  currentItemTextOutlineColor: string; //zsviczian
+  currentItemTextOutlineWidth: number; //zsviczian
+  currentItemTextOutlineOpacity: number; //zsviczian
   currentItemStartArrowhead: Arrowhead | null;
   currentItemEndArrowhead: Arrowhead | null;
   currentHoveredFontFamily: FontFamilyValues | null;

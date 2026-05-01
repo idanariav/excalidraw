@@ -272,6 +272,10 @@ export const SelectedShapeActions = ({
           {(appState.activeTool.type === "text" ||
             suppportsHorizontalAlign(targetElements, elementsMap)) &&
             renderAction("changeTextAlign")}
+          {renderAction("changeTextOutlineColor")} {/*//zsviczian*/}
+          {renderAction("changeTextOutlineWidth")} {/*//zsviczian*/}
+          {targetElements.some((el) => isTextElement(el) && el.textOutlineWidth > 0) && //zsviczian
+            renderAction("changeTextOutlineOpacity")} {/*//zsviczian*/}
         </>
       )}
 
@@ -662,6 +666,15 @@ const CombinedTextProperties = ({
                 renderAction("changeTextAlign")}
               {shouldAllowVerticalAlign(targetElements, elementsMap) &&
                 renderAction("changeVerticalAlign")}
+              {(appState.activeTool.type === "text" || //zsviczian
+                targetElements.some(isTextElement)) && ( //zsviczian
+                <>
+                  {renderAction("changeTextOutlineColor")}
+                  {renderAction("changeTextOutlineWidth")}
+                  {targetElements.some((el) => isTextElement(el) && el.textOutlineWidth > 0) && //zsviczian
+                    renderAction("changeTextOutlineOpacity")}
+                </>
+              )}
             </div>
           </PropertiesPopover>
         )}

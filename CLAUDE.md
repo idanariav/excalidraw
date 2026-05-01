@@ -24,6 +24,23 @@ yarn test:update     # Run all tests (with snapshot updates)
 yarn fix             # Auto-fix formatting and linting issues
 ```
 
+## Fork Convention: `//zsviczian` Markers
+
+Every line added or modified relative to upstream must end with `//zsviczian`. However, **`//zsviczian` inside JSX children context renders as visible text** — JSX treats anything between tags that isn't a `{}` expression as a text node.
+
+**Safe positions** (treated as JS line comments, not rendered):
+- End of a line inside a JSX opening tag's attribute area: `<Component //zsviczian`
+- End of a line inside a `{}` expression: `{someCondition && //zsviczian`
+- End of a plain JS/TS line (outside JSX): `const x = 1; //zsviczian`
+
+**Unsafe positions** (render as visible text — DO NOT use):
+- After the closing `>` of an opening tag: `<fieldset> //zsviczian`
+- After the closing `/>` of a self-closing tag when inside a JSX parent: `<Foo /> //zsviczian`
+- After a closing tag: `</legend> //zsviczian`
+- After `<>` or `</>` fragment delimiters: `<> //zsviczian`
+
+**Fix for unsafe positions**: Either omit the marker (the surrounding line already has one), or use a JSX comment: `{/* //zsviczian */}`.
+
 ## Architecture Notes
 
 ### Package System

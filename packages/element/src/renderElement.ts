@@ -618,6 +618,26 @@ const drawElementOnCanvas = (
           lineHeightPx,
         );
 
+        // Draw text outline (halo) behind fill //zsviczian
+        if (element.textOutlineWidth > 0) { //zsviczian
+          const prevAlpha = context.globalAlpha; //zsviczian
+          context.globalAlpha = prevAlpha * (element.textOutlineOpacity / 100); //zsviczian
+          context.strokeStyle = //zsviczian
+            renderConfig.theme === THEME.DARK //zsviczian
+              ? applyDarkModeFilter(element.textOutlineColor) //zsviczian
+              : element.textOutlineColor; //zsviczian
+          context.lineWidth = element.textOutlineWidth * 2; //zsviczian
+          context.lineJoin = "round"; //zsviczian
+          for (let index = 0; index < lines.length; index++) { //zsviczian
+            context.strokeText( //zsviczian
+              lines[index], //zsviczian
+              horizontalOffset, //zsviczian
+              index * lineHeightPx + verticalOffset, //zsviczian
+            ); //zsviczian
+          } //zsviczian
+          context.globalAlpha = prevAlpha; //zsviczian
+        } //zsviczian
+
         for (let index = 0; index < lines.length; index++) {
           context.fillText(
             lines[index],

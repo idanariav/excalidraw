@@ -407,6 +407,9 @@ export const restoreElement = (
         originalText: element.originalText || text,
         autoResize: element.autoResize ?? true,
         lineHeight,
+        textOutlineColor: (element as any).textOutlineColor ?? "transparent", //zsviczian
+        textOutlineWidth: (element as any).textOutlineWidth ?? 0, //zsviczian
+        textOutlineOpacity: (element as any).textOutlineOpacity ?? 100, //zsviczian
       });
 
       // if empty text, mark as deleted. We keep in array

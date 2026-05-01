@@ -27,6 +27,9 @@ export {
   actionChangeTriGapVertex, //zsviczian
   actionChangeTriGapSize, //zsviczian
   actionChangeTriGapClosed, //zsviczian
+  actionChangeTextOutlineColor, //zsviczian
+  actionChangeTextOutlineWidth, //zsviczian
+  actionChangeTextOutlineOpacity, //zsviczian
 } from "./actionProperties";
 
 export {

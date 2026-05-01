@@ -749,9 +749,21 @@ const renderElementToSvg = (
               : element.strokeColor,
           );
           text.setAttribute("text-anchor", textAnchor);
-          text.setAttribute("style", "white-space: pre;");
           text.setAttribute("direction", direction);
           text.setAttribute("dominant-baseline", "alphabetic");
+          if (element.textOutlineWidth > 0) { //zsviczian
+            const outlineColor = renderConfig.theme === THEME.DARK //zsviczian
+              ? applyDarkModeFilter(element.textOutlineColor) //zsviczian
+              : element.textOutlineColor; //zsviczian
+            text.setAttribute("stroke", outlineColor); //zsviczian
+            text.setAttribute("stroke-width", `${element.textOutlineWidth * 2}px`); //zsviczian
+            text.setAttribute("stroke-linejoin", "round"); //zsviczian
+            text.setAttribute("stroke-opacity", `${element.textOutlineOpacity / 100}`); //zsviczian
+            text.setAttribute("paint-order", "stroke"); //zsviczian
+            text.setAttribute("style", "white-space: pre;"); //zsviczian
+          } else { //zsviczian
+            text.setAttribute("style", "white-space: pre;");
+          } //zsviczian
           node.appendChild(text);
         }
 

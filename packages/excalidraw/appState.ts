@@ -42,6 +42,9 @@ export const getDefaultAppState = (): Omit<
     currentItemStrokeStyle: DEFAULT_ELEMENT_PROPS.strokeStyle,
     currentItemStrokeWidth: DEFAULT_ELEMENT_PROPS.strokeWidth,
     currentItemTextAlign: DEFAULT_TEXT_ALIGN,
+    currentItemTextOutlineColor: "transparent", //zsviczian
+    currentItemTextOutlineWidth: 0, //zsviczian
+    currentItemTextOutlineOpacity: 100, //zsviczian
     currentHoveredFontFamily: null,
     currentItemFrameRole: null, //zsviczian
     currentItemArcGapAngle: 0, //zsviczian
@@ -200,6 +203,9 @@ const APP_STATE_STORAGE_CONF = (<
   currentItemStrokeStyle: { browser: true, export: false, server: false },
   currentItemStrokeWidth: { browser: true, export: false, server: false },
   currentItemTextAlign: { browser: true, export: false, server: false },
+  currentItemTextOutlineColor: { browser: true, export: false, server: false }, //zsviczian
+  currentItemTextOutlineWidth: { browser: true, export: false, server: false }, //zsviczian
+  currentItemTextOutlineOpacity: { browser: true, export: false, server: false }, //zsviczian
   currentHoveredFontFamily: { browser: false, export: false, server: false },
   currentItemFrameRole: { browser: true, export: false, server: false }, //zsviczian
   currentItemArcGapAngle: { browser: true, export: false, server: false }, //zsviczian
