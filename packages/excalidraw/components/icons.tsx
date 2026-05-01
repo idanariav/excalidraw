@@ -2601,3 +2601,50 @@ export const settingsIcon = createIcon(
   </g>,
   tablerIconProps,
 );
+
+// open arc: a "C" shape (open partial circle) //zsviczian
+export const ArcOpenIcon = createIcon(
+  <g strokeWidth="1.5">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M17 4.5a9 9 0 0 1 0 15" />
+  </g>,
+  tablerIconProps,
+); //zsviczian
+
+// closed arc: a "G" shape (partial circle with closing line segments) //zsviczian
+export const ArcClosedIcon = createIcon(
+  <g strokeWidth="1.5">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M17 4.5a9 9 0 0 1 0 15" />
+    <path d="M17 4.5l0 4" />
+    <path d="M17 15.5l0 4" />
+  </g>,
+  tablerIconProps,
+); //zsviczian
+
+// three-quarter arc preset icon (90° gap at 12 o'clock) //zsviczian
+export const ArcThreeQuarterIcon = createIcon(
+  <g strokeWidth="1.5">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M17.66 6.34 A 8 8 0 1 1 6.34 6.34" />
+  </g>,
+  tablerIconProps,
+); //zsviczian
+
+// half arc preset icon (180° gap at 12 o'clock) //zsviczian
+export const ArcHalfIcon = createIcon(
+  <g strokeWidth="1.5">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M20 12 A 8 8 0 0 1 4 12" />
+  </g>,
+  tablerIconProps,
+); //zsviczian
+
+// quarter arc preset icon (270° gap at 12 o'clock) //zsviczian
+export const ArcQuarterIcon = createIcon(
+  <g strokeWidth="1.5">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M17.66 17.66 A 8 8 0 0 1 6.34 17.66" />
+  </g>,
+  tablerIconProps,
+); //zsviczian

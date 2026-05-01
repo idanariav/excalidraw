@@ -19,6 +19,8 @@ export {
   actionChangeTextAlign,
   actionChangeVerticalAlign,
   actionChangeArrowProperties,
+  actionChangeArcGapAngle, //zsviczian
+  actionChangeArcGapClosed, //zsviczian
 } from "./actionProperties";
 
 export {

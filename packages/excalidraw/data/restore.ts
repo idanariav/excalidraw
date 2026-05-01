@@ -561,6 +561,10 @@ export const restoreElement = (
 
     // generic elements
     case "ellipse":
+      return restoreElementWithProperties(element, {
+        arcGapAngle: element.arcGapAngle ?? 0, //zsviczian
+        arcGapClosed: element.arcGapClosed ?? false, //zsviczian
+      });
     case "rectangle":
     case "diamond":
       return restoreElementWithProperties(element, {});

@@ -70,6 +70,7 @@ import type {
   ElementsMap,
   ExcalidrawBindableElement,
   ExcalidrawElement,
+  ExcalidrawEllipseElement, //zsviczian
   ExcalidrawLinearElement,
   ExcalidrawTextElement,
   ExcalidrawFrameElement,
@@ -136,6 +137,11 @@ import {
   ArrowheadCardinalityZeroOrManyIcon,
   ArrowheadCardinalityZeroOrOneIcon,
   markerFrameIcon,
+  ArcOpenIcon, //zsviczian
+  ArcClosedIcon, //zsviczian
+  ArcThreeQuarterIcon, //zsviczian
+  ArcHalfIcon, //zsviczian
+  ArcQuarterIcon, //zsviczian
 } from "../components/icons";
 
 import { Fonts } from "../fonts";
@@ -889,6 +895,113 @@ export const actionChangeOpacity = register<ExcalidrawElement["opacity"]>({
     );
   },
 });
+
+export const actionChangeArcGapAngle = register<number>({ //zsviczian
+  name: "changeArcGapAngle", //zsviczian
+  label: "labels.arcGapAngle", //zsviczian
+  trackEvent: false, //zsviczian
+  perform: (elements, appState, value) => { //zsviczian
+    return { //zsviczian
+      elements: changeProperty(elements, appState, (el) => { //zsviczian
+        if (el.type !== "ellipse") { return el; } //zsviczian
+        return newElementWith(el as ExcalidrawEllipseElement, { arcGapAngle: value }); //zsviczian
+      }), //zsviczian
+      appState: { ...appState, currentItemArcGapAngle: value }, //zsviczian
+      captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+    }; //zsviczian
+  }, //zsviczian
+  PanelComponent: ({ elements, appState, app, updateData }) => { //zsviczian
+    const targetElements = getTargetElements(getNonDeletedElements(elements), appState); //zsviczian
+    const hasEllipse = targetElements.some((el) => el.type === "ellipse") || appState.activeTool.type === "ellipse"; //zsviczian
+    if (!hasEllipse) { return null; } //zsviczian
+    const arcGapDegrees = getFormValue( //zsviczian
+      elements, //zsviczian
+      app, //zsviczian
+      (el) => el.type === "ellipse" ? Math.round(((el as ExcalidrawEllipseElement).arcGapAngle ?? 0) * (180 / Math.PI)) : null, //zsviczian
+      (el) => el.type === "ellipse", //zsviczian
+      (hasSelection) => hasSelection ? null : Math.round((appState.currentItemArcGapAngle ?? 0) * (180 / Math.PI)), //zsviczian
+    ); //zsviczian
+    const arcPresets = [ //zsviczian
+      { degrees: 270, icon: ArcThreeQuarterIcon, label: t("labels.arcThreeQuarter") }, //zsviczian
+      { degrees: 180, icon: ArcHalfIcon, label: t("labels.arcHalf") }, //zsviczian
+      { degrees: 90, icon: ArcQuarterIcon, label: t("labels.arcQuarter") }, //zsviczian
+    ]; //zsviczian
+    return (
+      <fieldset>
+        <legend>{t("labels.arcGapAngle")}</legend>
+        <div className="buttonList">
+          {arcPresets.map(({ degrees, icon, label }) => (
+            <ButtonIcon
+              key={degrees}
+              title={label}
+              icon={icon}
+              active={arcGapDegrees === degrees}
+              onClick={() => updateData(degrees * (Math.PI / 180))}
+            />
+          ))}
+        </div>
+        <Range
+          label=""
+          value={arcGapDegrees ?? 0}
+          hasCommonValue={arcGapDegrees !== null}
+          onChange={(degrees) => updateData(degrees * (Math.PI / 180))}
+          min={0}
+          max={359}
+          step={1}
+          testId="arcGapAngle"
+        />
+      </fieldset>
+    );
+  }, //zsviczian
+}); //zsviczian
+
+export const actionChangeArcGapClosed = register<boolean>({ //zsviczian
+  name: "changeArcGapClosed", //zsviczian
+  label: "labels.arcGapStyle", //zsviczian
+  trackEvent: false, //zsviczian
+  perform: (elements, appState, value) => { //zsviczian
+    return { //zsviczian
+      elements: changeProperty(elements, appState, (el) => { //zsviczian
+        if (el.type !== "ellipse") { return el; } //zsviczian
+        return newElementWith(el as ExcalidrawEllipseElement, { arcGapClosed: value }); //zsviczian
+      }), //zsviczian
+      appState: { ...appState, currentItemArcGapClosed: value }, //zsviczian
+      captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+    }; //zsviczian
+  }, //zsviczian
+  PanelComponent: ({ elements, appState, app, updateData }) => { //zsviczian
+    const targetElements = getTargetElements(getNonDeletedElements(elements), appState); //zsviczian
+    const hasArcWithGap = targetElements.some( //zsviczian
+      (el) => el.type === "ellipse" && ((el as ExcalidrawEllipseElement).arcGapAngle ?? 0) > 0, //zsviczian
+    ); //zsviczian
+    if (!hasArcWithGap) { return null; } //zsviczian
+    const arcGapClosed = getFormValue( //zsviczian
+      elements, //zsviczian
+      app, //zsviczian
+      (el) => el.type === "ellipse" && ((el as ExcalidrawEllipseElement).arcGapAngle ?? 0) > 0 //zsviczian
+        ? ((el as ExcalidrawEllipseElement).arcGapClosed ?? false) //zsviczian
+        : null, //zsviczian
+      (el) => el.type === "ellipse" && ((el as ExcalidrawEllipseElement).arcGapAngle ?? 0) > 0, //zsviczian
+      (hasSelection) => hasSelection ? null : (appState.currentItemArcGapClosed ?? false), //zsviczian
+    ); //zsviczian
+    return (
+      <fieldset>
+        <legend>{t("labels.arcGapStyle")}</legend>
+        <div className="buttonList">
+          <RadioSelection
+            group="arcGapClosed"
+            options={[
+              { value: false, text: t("labels.arcOpen"), icon: ArcOpenIcon },
+              { value: true, text: t("labels.arcClosed"), icon: ArcClosedIcon },
+            ]}
+            value={arcGapClosed ?? false}
+            onChange={(value) => updateData(value)}
+          />
+        </div>
+      </fieldset>
+    );
+  }, //zsviczian
+}); //zsviczian
 
 let scaleFontSize = false; //zsviczian
 let useFibonacci = false; //zsviczian

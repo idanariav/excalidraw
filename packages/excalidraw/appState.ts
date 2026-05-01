@@ -44,6 +44,8 @@ export const getDefaultAppState = (): Omit<
     currentItemTextAlign: DEFAULT_TEXT_ALIGN,
     currentHoveredFontFamily: null,
     currentItemFrameRole: null, //zsviczian
+    currentItemArcGapAngle: 0, //zsviczian
+    currentItemArcGapClosed: false, //zsviczian
     cursorButton: "up",
     activeEmbeddable: null,
     newElement: null,
@@ -194,6 +196,8 @@ const APP_STATE_STORAGE_CONF = (<
   currentItemTextAlign: { browser: true, export: false, server: false },
   currentHoveredFontFamily: { browser: false, export: false, server: false },
   currentItemFrameRole: { browser: true, export: false, server: false }, //zsviczian
+  currentItemArcGapAngle: { browser: true, export: false, server: false }, //zsviczian
+  currentItemArcGapClosed: { browser: true, export: false, server: false }, //zsviczian
   cursorButton: { browser: true, export: false, server: false },
   activeEmbeddable: { browser: false, export: false, server: false },
   newElement: { browser: false, export: false, server: false },

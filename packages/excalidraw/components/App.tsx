@@ -128,6 +128,7 @@ import {
   newFrameElement,
   newFreeDrawElement,
   newEmbeddableElement,
+  newEllipseElement, //zsviczian
   newMagicFrameElement,
   newIframeElement,
   newArrowElement,
@@ -10158,6 +10159,13 @@ class App extends React.Component<AppProps, AppState> {
         type: "embeddable",
         ...baseElementAttributes,
       });
+    } else if (elementType === "ellipse") { //zsviczian
+      element = newEllipseElement({ //zsviczian
+        type: "ellipse", //zsviczian
+        ...baseElementAttributes, //zsviczian
+        arcGapAngle: this.state.currentItemArcGapAngle, //zsviczian
+        arcGapClosed: this.state.currentItemArcGapClosed, //zsviczian
+      }); //zsviczian
     } else {
       element = newElement({
         type: elementType,

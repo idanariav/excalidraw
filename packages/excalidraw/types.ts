@@ -388,6 +388,8 @@ export interface AppState {
   currentItemRoundness: StrokeRoundness;
   currentItemArrowType: "sharp" | "round" | "elbow";
   currentItemFrameRole: ExcalidrawFrameLikeElement["frameRole"] | null; //zsviczian
+  currentItemArcGapAngle: number; //zsviczian
+  currentItemArcGapClosed: boolean; //zsviczian
   viewBackgroundColor: string;
   scrollX: number;
   scrollY: number;

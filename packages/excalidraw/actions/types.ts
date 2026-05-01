@@ -138,6 +138,8 @@ export type ActionName =
   | "wrapTextInContainer"
   | "toggleLaserPointerTool" //zsviczian
   | "toggleFrameRole" //zsviczian
+  | "changeArcGapAngle" //zsviczian
+  | "changeArcGapClosed" //zsviczian
   | "commandPalette"
   | "autoResize"
   | "elementStats"

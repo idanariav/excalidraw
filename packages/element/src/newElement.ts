@@ -43,6 +43,7 @@ import type {
   ExcalidrawTextContainer,
   ExcalidrawFrameElement,
   ExcalidrawEmbeddableElement,
+  ExcalidrawEllipseElement, //zsviczian
   ExcalidrawMagicFrameElement,
   ExcalidrawIframeElement,
   ElementsMap,
@@ -164,6 +165,19 @@ export const newElement = (
   } & ElementConstructorOpts,
 ): NonDeleted<ExcalidrawGenericElement> =>
   _newElementBase<ExcalidrawGenericElement>(opts.type, opts);
+
+export const newEllipseElement = ( //zsviczian
+  opts: { //zsviczian
+    type: "ellipse"; //zsviczian
+    arcGapAngle?: number; //zsviczian
+    arcGapClosed?: boolean; //zsviczian
+  } & ElementConstructorOpts, //zsviczian
+): NonDeleted<ExcalidrawEllipseElement> => ({ //zsviczian
+  ..._newElementBase<ExcalidrawEllipseElement>("ellipse", opts), //zsviczian
+  type: "ellipse", //zsviczian
+  arcGapAngle: opts.arcGapAngle ?? 0, //zsviczian
+  arcGapClosed: opts.arcGapClosed ?? false, //zsviczian
+}); //zsviczian
 
 export const newEmbeddableElement = (
   opts: {

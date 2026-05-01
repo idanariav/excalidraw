@@ -96,6 +96,8 @@ export type ExcalidrawDiamondElement = _ExcalidrawElementBase & {
 
 export type ExcalidrawEllipseElement = _ExcalidrawElementBase & {
   type: "ellipse";
+  arcGapAngle?: number; // gap size in radians (0 = full ellipse, up to ~2π) //zsviczian
+  arcGapClosed?: boolean; // true = bridge gap endpoints with straight lines //zsviczian
 };
 
 export type ExcalidrawEmbeddableElement = _ExcalidrawElementBase &

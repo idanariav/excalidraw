@@ -72,6 +72,7 @@ import type {
   ExcalidrawFreeDrawElement,
   ElementsMap,
   ExcalidrawLineElement,
+  ExcalidrawEllipseElement, //zsviczian
   Arrowhead,
 } from "./types";
 
@@ -872,6 +873,24 @@ const _generateElementShape = (
       return shape;
     }
     case "ellipse": {
+      const arcGap = (element as ExcalidrawEllipseElement).arcGapAngle ?? 0; //zsviczian
+      if (arcGap > 0) { //zsviczian
+        const halfGap = arcGap / 2; //zsviczian
+        const eps = 0.001; // nudge off exact π multiples to avoid roughjs stroke artifacts //zsviczian
+        const start = Math.PI * 1.5 + halfGap + eps; //zsviczian
+        const stop = Math.PI * 3.5 - halfGap - eps; //zsviczian
+        const closed = (element as ExcalidrawEllipseElement).arcGapClosed ?? false; //zsviczian
+        const opts = generateRoughOptions(element, false, isDarkMode); //zsviczian
+        if (!closed) { //zsviczian
+          opts.fill = undefined; // suppress fill on open arcs //zsviczian
+          opts.fillStyle = undefined; //zsviczian
+        } //zsviczian
+        return generator.arc( //zsviczian
+          element.width / 2, element.height / 2, //zsviczian
+          element.width, element.height, //zsviczian
+          start, stop, closed, opts, //zsviczian
+        ) as ElementShapes[typeof element.type]; //zsviczian
+      } //zsviczian
       const shape: ElementShapes[typeof element.type] = generator.ellipse(
         element.width / 2,
         element.height / 2,

@@ -230,6 +230,15 @@ export const SelectedShapeActions = ({
         <>{renderAction("changeRoundness")}</>
       )}
 
+      {/* //zsviczian: arc gap controls for ellipses */}
+      {(appState.activeTool.type === "ellipse" ||
+        targetElements.some((el) => el.type === "ellipse")) && (
+        <>
+          {renderAction("changeArcGapAngle")}
+          {renderAction("changeArcGapClosed")}
+        </>
+      )}
+
       {(toolIsArrow(appState.activeTool.type) ||
         targetElements.some((element) => toolIsArrow(element.type))) && (
         <>{renderAction("changeArrowType")}</>
