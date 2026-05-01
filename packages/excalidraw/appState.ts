@@ -46,6 +46,9 @@ export const getDefaultAppState = (): Omit<
     currentItemFrameRole: null, //zsviczian
     currentItemArcGapAngle: 0, //zsviczian
     currentItemArcGapClosed: false, //zsviczian
+    currentItemRectGapSide: null, //zsviczian
+    currentItemRectGapSize: 1, //zsviczian
+    currentItemRectGapDepth: 0, //zsviczian
     cursorButton: "up",
     activeEmbeddable: null,
     newElement: null,
@@ -198,6 +201,9 @@ const APP_STATE_STORAGE_CONF = (<
   currentItemFrameRole: { browser: true, export: false, server: false }, //zsviczian
   currentItemArcGapAngle: { browser: true, export: false, server: false }, //zsviczian
   currentItemArcGapClosed: { browser: true, export: false, server: false }, //zsviczian
+  currentItemRectGapSide: { browser: true, export: false, server: false }, //zsviczian
+  currentItemRectGapSize: { browser: true, export: false, server: false }, //zsviczian
+  currentItemRectGapDepth: { browser: true, export: false, server: false }, //zsviczian
   cursorButton: { browser: true, export: false, server: false },
   activeEmbeddable: { browser: false, export: false, server: false },
   newElement: { browser: false, export: false, server: false },

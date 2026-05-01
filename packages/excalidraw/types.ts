@@ -390,6 +390,9 @@ export interface AppState {
   currentItemFrameRole: ExcalidrawFrameLikeElement["frameRole"] | null; //zsviczian
   currentItemArcGapAngle: number; //zsviczian
   currentItemArcGapClosed: boolean; //zsviczian
+  currentItemRectGapSide: "top" | "bottom" | "left" | "right" | null; //zsviczian
+  currentItemRectGapSize: number; //zsviczian
+  currentItemRectGapDepth: number; //zsviczian
   viewBackgroundColor: string;
   scrollX: number;
   scrollY: number;

@@ -71,6 +71,7 @@ import type {
   ExcalidrawBindableElement,
   ExcalidrawElement,
   ExcalidrawEllipseElement, //zsviczian
+  ExcalidrawRectangleElement, //zsviczian
   ExcalidrawLinearElement,
   ExcalidrawTextElement,
   ExcalidrawFrameElement,
@@ -142,6 +143,11 @@ import {
   ArcThreeQuarterIcon, //zsviczian
   ArcHalfIcon, //zsviczian
   ArcQuarterIcon, //zsviczian
+  RectGapNoneIcon, //zsviczian
+  RectGapTopIcon, //zsviczian
+  RectGapBottomIcon, //zsviczian
+  RectGapLeftIcon, //zsviczian
+  RectGapRightIcon, //zsviczian
 } from "../components/icons";
 
 import { Fonts } from "../fonts";
@@ -922,9 +928,9 @@ export const actionChangeArcGapAngle = register<number>({ //zsviczian
       (hasSelection) => hasSelection ? null : Math.round((appState.currentItemArcGapAngle ?? 0) * (180 / Math.PI)), //zsviczian
     ); //zsviczian
     const arcPresets = [ //zsviczian
-      { degrees: 270, icon: ArcThreeQuarterIcon, label: t("labels.arcThreeQuarter") }, //zsviczian
+      { degrees: 90, icon: ArcThreeQuarterIcon, label: t("labels.arcThreeQuarter") }, //zsviczian
       { degrees: 180, icon: ArcHalfIcon, label: t("labels.arcHalf") }, //zsviczian
-      { degrees: 90, icon: ArcQuarterIcon, label: t("labels.arcQuarter") }, //zsviczian
+      { degrees: 270, icon: ArcQuarterIcon, label: t("labels.arcQuarter") }, //zsviczian
     ]; //zsviczian
     return (
       <fieldset>
@@ -998,6 +1004,153 @@ export const actionChangeArcGapClosed = register<boolean>({ //zsviczian
             onChange={(value) => updateData(value)}
           />
         </div>
+      </fieldset>
+    );
+  }, //zsviczian
+}); //zsviczian
+
+export const actionChangeRectGapSide = register<"top" | "bottom" | "left" | "right" | null>({ //zsviczian
+  name: "changeRectGapSide", //zsviczian
+  label: "labels.rectGapSide", //zsviczian
+  trackEvent: false, //zsviczian
+  perform: (elements, appState, value) => { //zsviczian
+    return { //zsviczian
+      elements: changeProperty(elements, appState, (el) => { //zsviczian
+        if (el.type !== "rectangle") { return el; } //zsviczian
+        return newElementWith(el as ExcalidrawRectangleElement, { rectGapSide: value }); //zsviczian
+      }), //zsviczian
+      appState: { ...appState, currentItemRectGapSide: value }, //zsviczian
+      captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+    }; //zsviczian
+  }, //zsviczian
+  PanelComponent: ({ elements, appState, app, updateData }) => { //zsviczian
+    const targetElements = getTargetElements(getNonDeletedElements(elements), appState); //zsviczian
+    const hasRect = targetElements.some((el) => el.type === "rectangle") || appState.activeTool.type === "rectangle"; //zsviczian
+    if (!hasRect) { return null; } //zsviczian
+    const rectGapSide = getFormValue( //zsviczian
+      elements, //zsviczian
+      app, //zsviczian
+      (el) => el.type === "rectangle" ? ((el as ExcalidrawRectangleElement).rectGapSide ?? null) : null, //zsviczian
+      (el) => el.type === "rectangle", //zsviczian
+      (hasSelection) => hasSelection ? null : appState.currentItemRectGapSide, //zsviczian
+    ); //zsviczian
+    const sides = [ //zsviczian
+      { value: null, icon: RectGapNoneIcon, label: t("labels.rectGapNone") }, //zsviczian
+      { value: "top", icon: RectGapTopIcon, label: t("labels.rectGapTop") }, //zsviczian
+      { value: "bottom", icon: RectGapBottomIcon, label: t("labels.rectGapBottom") }, //zsviczian
+      { value: "left", icon: RectGapLeftIcon, label: t("labels.rectGapLeft") }, //zsviczian
+      { value: "right", icon: RectGapRightIcon, label: t("labels.rectGapRight") }, //zsviczian
+    ]; //zsviczian
+    return (
+      <fieldset>
+        <legend>{t("labels.rectGapSide")}</legend>
+        <div className="buttonList">
+          {sides.map((s) => (
+            <ButtonIcon
+              key={String(s.value)}
+              icon={s.icon}
+              title={s.label}
+              active={rectGapSide === s.value}
+              onClick={() => updateData(s.value)}
+            />
+          ))}
+        </div>
+      </fieldset>
+    );
+  }, //zsviczian
+}); //zsviczian
+
+export const actionChangeRectGapSize = register<number>({ //zsviczian
+  name: "changeRectGapSize", //zsviczian
+  label: "labels.rectGapSize", //zsviczian
+  trackEvent: false, //zsviczian
+  perform: (elements, appState, value) => { //zsviczian
+    return { //zsviczian
+      elements: changeProperty(elements, appState, (el) => { //zsviczian
+        if (el.type !== "rectangle") { return el; } //zsviczian
+        return newElementWith(el as ExcalidrawRectangleElement, { rectGapSize: value }); //zsviczian
+      }), //zsviczian
+      appState: { ...appState, currentItemRectGapSize: value }, //zsviczian
+      captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+    }; //zsviczian
+  }, //zsviczian
+  PanelComponent: ({ elements, appState, app, updateData }) => { //zsviczian
+    const targetElements = getTargetElements(getNonDeletedElements(elements), appState); //zsviczian
+    const hasRectWithGap = targetElements.some( //zsviczian
+      (el) => el.type === "rectangle" && (el as ExcalidrawRectangleElement).rectGapSide != null, //zsviczian
+    ); //zsviczian
+    if (!hasRectWithGap) { return null; } //zsviczian
+    const rectGapSize = getFormValue( //zsviczian
+      elements, //zsviczian
+      app, //zsviczian
+      (el) => el.type === "rectangle" && (el as ExcalidrawRectangleElement).rectGapSide != null //zsviczian
+        ? ((el as ExcalidrawRectangleElement).rectGapSize ?? 1) //zsviczian
+        : null, //zsviczian
+      (el) => el.type === "rectangle" && (el as ExcalidrawRectangleElement).rectGapSide != null, //zsviczian
+      (hasSelection) => hasSelection ? null : appState.currentItemRectGapSize, //zsviczian
+    ); //zsviczian
+    const pct = Math.round((rectGapSize ?? 1) * 100); //zsviczian
+    return (
+      <fieldset>
+        <legend>{t("labels.rectGapSize")}</legend>
+        <Range
+          label=""
+          min={1}
+          max={100}
+          step={1}
+          value={pct}
+          hasCommonValue={rectGapSize !== null}
+          onChange={(v) => updateData(v / 100)}
+          testId="rectGapSize"
+        />
+      </fieldset>
+    );
+  }, //zsviczian
+}); //zsviczian
+
+export const actionChangeRectGapDepth = register<number>({ //zsviczian
+  name: "changeRectGapDepth", //zsviczian
+  label: "labels.rectGapDepth", //zsviczian
+  trackEvent: false, //zsviczian
+  perform: (elements, appState, value) => { //zsviczian
+    return { //zsviczian
+      elements: changeProperty(elements, appState, (el) => { //zsviczian
+        if (el.type !== "rectangle") { return el; } //zsviczian
+        return newElementWith(el as ExcalidrawRectangleElement, { rectGapDepth: value }); //zsviczian
+      }), //zsviczian
+      appState: { ...appState, currentItemRectGapDepth: value }, //zsviczian
+      captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+    }; //zsviczian
+  }, //zsviczian
+  PanelComponent: ({ elements, appState, app, updateData }) => { //zsviczian
+    const targetElements = getTargetElements(getNonDeletedElements(elements), appState); //zsviczian
+    const hasRectWithGap = targetElements.some( //zsviczian
+      (el) => el.type === "rectangle" && (el as ExcalidrawRectangleElement).rectGapSide != null, //zsviczian
+    ); //zsviczian
+    if (!hasRectWithGap) { return null; } //zsviczian
+    const rectGapDepth = getFormValue( //zsviczian
+      elements, //zsviczian
+      app, //zsviczian
+      (el) => el.type === "rectangle" && (el as ExcalidrawRectangleElement).rectGapSide != null //zsviczian
+        ? ((el as ExcalidrawRectangleElement).rectGapDepth ?? 0) //zsviczian
+        : null, //zsviczian
+      (el) => el.type === "rectangle" && (el as ExcalidrawRectangleElement).rectGapSide != null, //zsviczian
+      (hasSelection) => hasSelection ? null : appState.currentItemRectGapDepth, //zsviczian
+    ); //zsviczian
+    const pct = Math.round((rectGapDepth ?? 0) * 100); //zsviczian
+    return (
+      <fieldset>
+        <legend>{t("labels.rectGapDepth")}</legend>
+        <Range
+          label=""
+          min={0}
+          max={100}
+          step={1}
+          value={pct}
+          hasCommonValue={rectGapDepth !== null}
+          onChange={(v) => updateData(v / 100)}
+          testId="rectGapDepth"
+        />
       </fieldset>
     );
   }, //zsviczian

@@ -44,6 +44,7 @@ import type {
   ExcalidrawFrameElement,
   ExcalidrawEmbeddableElement,
   ExcalidrawEllipseElement, //zsviczian
+  ExcalidrawRectangleElement, //zsviczian
   ExcalidrawMagicFrameElement,
   ExcalidrawIframeElement,
   ElementsMap,
@@ -165,6 +166,21 @@ export const newElement = (
   } & ElementConstructorOpts,
 ): NonDeleted<ExcalidrawGenericElement> =>
   _newElementBase<ExcalidrawGenericElement>(opts.type, opts);
+
+export const newRectangleElement = ( //zsviczian
+  opts: { //zsviczian
+    type: "rectangle"; //zsviczian
+    rectGapSide?: "top" | "bottom" | "left" | "right" | null; //zsviczian
+    rectGapSize?: number; //zsviczian
+    rectGapDepth?: number; //zsviczian
+  } & ElementConstructorOpts, //zsviczian
+): NonDeleted<ExcalidrawRectangleElement> => ({ //zsviczian
+  ..._newElementBase<ExcalidrawRectangleElement>("rectangle", opts), //zsviczian
+  type: "rectangle", //zsviczian
+  rectGapSide: opts.rectGapSide ?? null, //zsviczian
+  rectGapSize: opts.rectGapSize ?? 1, //zsviczian
+  rectGapDepth: opts.rectGapDepth ?? 0, //zsviczian
+}); //zsviczian
 
 export const newEllipseElement = ( //zsviczian
   opts: { //zsviczian

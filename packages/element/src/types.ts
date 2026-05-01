@@ -88,6 +88,9 @@ export type ExcalidrawSelectionElement = _ExcalidrawElementBase & {
 
 export type ExcalidrawRectangleElement = _ExcalidrawElementBase & {
   type: "rectangle";
+  rectGapSide?: "top" | "bottom" | "left" | "right" | null; // null/undefined = no gap //zsviczian
+  rectGapSize?: number; // 0–1, proportion of that side that is open, centered //zsviczian
+  rectGapDepth?: number; // 0–1, how far the gap extends into adjacent sides //zsviczian
 };
 
 export type ExcalidrawDiamondElement = _ExcalidrawElementBase & {

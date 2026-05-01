@@ -239,6 +239,16 @@ export const SelectedShapeActions = ({
         </>
       )}
 
+      {/* //zsviczian: rect gap controls for rectangles */}
+      {(appState.activeTool.type === "rectangle" ||
+        targetElements.some((el) => el.type === "rectangle")) && (
+        <>
+          {renderAction("changeRectGapSide")}
+          {renderAction("changeRectGapSize")}
+          {renderAction("changeRectGapDepth")}
+        </>
+      )}
+
       {(toolIsArrow(appState.activeTool.type) ||
         targetElements.some((element) => toolIsArrow(element.type))) && (
         <>{renderAction("changeArrowType")}</>

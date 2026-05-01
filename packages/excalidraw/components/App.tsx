@@ -129,6 +129,7 @@ import {
   newFreeDrawElement,
   newEmbeddableElement,
   newEllipseElement, //zsviczian
+  newRectangleElement, //zsviczian
   newMagicFrameElement,
   newIframeElement,
   newArrowElement,
@@ -10165,6 +10166,14 @@ class App extends React.Component<AppProps, AppState> {
         ...baseElementAttributes, //zsviczian
         arcGapAngle: this.state.currentItemArcGapAngle, //zsviczian
         arcGapClosed: this.state.currentItemArcGapClosed, //zsviczian
+      }); //zsviczian
+    } else if (elementType === "rectangle") { //zsviczian
+      element = newRectangleElement({ //zsviczian
+        type: "rectangle", //zsviczian
+        ...baseElementAttributes, //zsviczian
+        rectGapSide: this.state.currentItemRectGapSide, //zsviczian
+        rectGapSize: this.state.currentItemRectGapSize, //zsviczian
+        rectGapDepth: this.state.currentItemRectGapDepth, //zsviczian
       }); //zsviczian
     } else {
       element = newElement({

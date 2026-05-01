@@ -140,6 +140,9 @@ export type ActionName =
   | "toggleFrameRole" //zsviczian
   | "changeArcGapAngle" //zsviczian
   | "changeArcGapClosed" //zsviczian
+  | "changeRectGapSide" //zsviczian
+  | "changeRectGapSize" //zsviczian
+  | "changeRectGapDepth" //zsviczian
   | "commandPalette"
   | "autoResize"
   | "elementStats"

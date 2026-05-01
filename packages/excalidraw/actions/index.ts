@@ -21,6 +21,9 @@ export {
   actionChangeArrowProperties,
   actionChangeArcGapAngle, //zsviczian
   actionChangeArcGapClosed, //zsviczian
+  actionChangeRectGapSide, //zsviczian
+  actionChangeRectGapSize, //zsviczian
+  actionChangeRectGapDepth, //zsviczian
 } from "./actionProperties";
 
 export {

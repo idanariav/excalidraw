@@ -2622,29 +2622,70 @@ export const ArcClosedIcon = createIcon(
   tablerIconProps,
 ); //zsviczian
 
-// three-quarter arc preset icon (90° gap at 12 o'clock) //zsviczian
+// three-quarter arc preset icon: gap=90°, shows 270° remaining (Pac-Man / three-quarter circle) //zsviczian
 export const ArcThreeQuarterIcon = createIcon(
   <g strokeWidth="1.5">
     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-    <path d="M17.66 6.34 A 8 8 0 1 1 6.34 6.34" />
+    <path d="M 12 12 L 17.66 6.34 A 8 8 0 1 1 6.34 6.34 Z" />
   </g>,
   tablerIconProps,
 ); //zsviczian
 
-// half arc preset icon (180° gap at 12 o'clock) //zsviczian
+// half arc preset icon: gap=180°, shows 180° remaining (semicircle at bottom) //zsviczian
 export const ArcHalfIcon = createIcon(
   <g strokeWidth="1.5">
     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-    <path d="M20 12 A 8 8 0 0 1 4 12" />
+    <path d="M 4 12 A 8 8 0 0 1 20 12 Z" />
   </g>,
   tablerIconProps,
 ); //zsviczian
 
-// quarter arc preset icon (270° gap at 12 o'clock) //zsviczian
+// quarter arc preset icon: gap=270°, shows 90° remaining (small pie slice at bottom) //zsviczian
 export const ArcQuarterIcon = createIcon(
   <g strokeWidth="1.5">
     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-    <path d="M17.66 17.66 A 8 8 0 0 1 6.34 17.66" />
+    <path d="M 12 12 L 17.66 17.66 A 8 8 0 0 1 6.34 17.66 Z" />
+  </g>,
+  tablerIconProps,
+); //zsviczian
+
+// rectangle gap side icons //zsviczian
+export const RectGapNoneIcon = createIcon(
+  <g strokeWidth="1.5">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <rect x="4" y="4" width="16" height="16" rx="0" />
+  </g>,
+  tablerIconProps,
+); //zsviczian
+
+export const RectGapTopIcon = createIcon(
+  <g strokeWidth="1.5">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M4 8 L4 20 L20 20 L20 8" />
+  </g>,
+  tablerIconProps,
+); //zsviczian
+
+export const RectGapBottomIcon = createIcon(
+  <g strokeWidth="1.5">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M4 16 L4 4 L20 4 L20 16" />
+  </g>,
+  tablerIconProps,
+); //zsviczian
+
+export const RectGapLeftIcon = createIcon(
+  <g strokeWidth="1.5">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M8 4 L20 4 L20 20 L8 20" />
+  </g>,
+  tablerIconProps,
+); //zsviczian
+
+export const RectGapRightIcon = createIcon(
+  <g strokeWidth="1.5">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+    <path d="M16 4 L4 4 L4 20 L16 20" />
   </g>,
   tablerIconProps,
 ); //zsviczian

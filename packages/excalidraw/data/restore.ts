@@ -566,6 +566,11 @@ export const restoreElement = (
         arcGapClosed: element.arcGapClosed ?? false, //zsviczian
       });
     case "rectangle":
+      return restoreElementWithProperties(element, {
+        rectGapSide: element.rectGapSide ?? null, //zsviczian
+        rectGapSize: element.rectGapSize ?? 1, //zsviczian
+        rectGapDepth: element.rectGapDepth ?? 0, //zsviczian
+      });
     case "diamond":
       return restoreElementWithProperties(element, {});
     case "iframe": //zsviczian

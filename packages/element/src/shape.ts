@@ -73,6 +73,7 @@ import type {
   ElementsMap,
   ExcalidrawLineElement,
   ExcalidrawEllipseElement, //zsviczian
+  ExcalidrawRectangleElement, //zsviczian
   Arrowhead,
 } from "./types";
 
@@ -782,6 +783,60 @@ const _generateElementShape = (
     case "rectangle":
     case "iframe":
     case "embeddable": {
+      const rectGapSide = (element as ExcalidrawRectangleElement).rectGapSide; //zsviczian
+      const rectGapSize = (element as ExcalidrawRectangleElement).rectGapSize ?? 1; //zsviczian
+      const rectGapDepth = (element as ExcalidrawRectangleElement).rectGapDepth ?? 0; //zsviczian
+      if (element.type === "rectangle" && rectGapSide != null && rectGapSize > 0) { //zsviczian
+        const { width: w, height: h } = element; //zsviczian
+        const opts = generateRoughOptions(element, true, isDarkMode); //zsviczian
+        opts.fill = undefined; //zsviczian
+        opts.fillStyle = undefined; //zsviczian
+        // gap along horizontal sides: gH/gHe are x-positions of gap edges //zsviczian
+        const gH = (w * (1 - rectGapSize)) / 2; //zsviczian
+        const gHe = (w * (1 + rectGapSize)) / 2; //zsviczian
+        // gap along vertical sides: gV/gVe are y-positions of gap edges //zsviczian
+        const gV = (h * (1 - rectGapSize)) / 2; //zsviczian
+        const gVe = (h * (1 + rectGapSize)) / 2; //zsviczian
+        let path: string; //zsviczian
+        if (rectGapSide === "top") { //zsviczian
+          const d = h * rectGapDepth; //zsviczian
+          if (rectGapSize >= 1) { //zsviczian
+            path = `M ${w} ${d} L ${w} ${h} L 0 ${h} L 0 ${d}`; //zsviczian
+          } else if (d > 0) { //zsviczian
+            path = `M ${gHe} 0 L ${w} 0 L ${w} ${h} L 0 ${h} L 0 0 L ${gH} 0 L ${gH} ${d} L ${gHe} ${d} L ${gHe} 0`; //zsviczian
+          } else { //zsviczian
+            path = `M ${gHe} 0 L ${w} 0 L ${w} ${h} L 0 ${h} L 0 0 L ${gH} 0`; //zsviczian
+          } //zsviczian
+        } else if (rectGapSide === "bottom") { //zsviczian
+          const d = h * rectGapDepth; //zsviczian
+          if (rectGapSize >= 1) { //zsviczian
+            path = `M 0 ${h - d} L 0 0 L ${w} 0 L ${w} ${h - d}`; //zsviczian
+          } else if (d > 0) { //zsviczian
+            path = `M ${gH} ${h} L 0 ${h} L 0 0 L ${w} 0 L ${w} ${h} L ${gHe} ${h} L ${gHe} ${h - d} L ${gH} ${h - d} L ${gH} ${h}`; //zsviczian
+          } else { //zsviczian
+            path = `M ${gH} ${h} L 0 ${h} L 0 0 L ${w} 0 L ${w} ${h} L ${gHe} ${h}`; //zsviczian
+          } //zsviczian
+        } else if (rectGapSide === "left") { //zsviczian
+          const d = w * rectGapDepth; //zsviczian
+          if (rectGapSize >= 1) { //zsviczian
+            path = `M ${d} 0 L ${w} 0 L ${w} ${h} L ${d} ${h}`; //zsviczian
+          } else if (d > 0) { //zsviczian
+            path = `M 0 ${gV} L 0 0 L ${w} 0 L ${w} ${h} L 0 ${h} L 0 ${gVe} L ${d} ${gVe} L ${d} ${gV} L 0 ${gV}`; //zsviczian
+          } else { //zsviczian
+            path = `M 0 ${gV} L 0 0 L ${w} 0 L ${w} ${h} L 0 ${h} L 0 ${gVe}`; //zsviczian
+          } //zsviczian
+        } else { //zsviczian
+          const d = w * rectGapDepth; //zsviczian
+          if (rectGapSize >= 1) { //zsviczian
+            path = `M ${w - d} 0 L 0 0 L 0 ${h} L ${w - d} ${h}`; //zsviczian
+          } else if (d > 0) { //zsviczian
+            path = `M ${w} ${gVe} L ${w} ${h} L 0 ${h} L 0 0 L ${w} 0 L ${w} ${gV} L ${w - d} ${gV} L ${w - d} ${gVe} L ${w} ${gVe}`; //zsviczian
+          } else { //zsviczian
+            path = `M ${w} ${gVe} L ${w} ${h} L 0 ${h} L 0 0 L ${w} 0 L ${w} ${gV}`; //zsviczian
+          } //zsviczian
+        } //zsviczian
+        return generator.path(path, opts) as ElementShapes[typeof element.type]; //zsviczian
+      } //zsviczian
       let shape: ElementShapes[typeof element.type];
       // this is for rendering the stroke/bg of the embeddable, especially
       // when the src url is not set
