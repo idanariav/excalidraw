@@ -780,6 +780,117 @@ const generateElementWithCanvas = (
   return prevElementWithCanvas;
 };
 
+//zsviczian
+// perspectiveY: horizontal strips — top/bottom trapezoid, varying strip WIDTH. //zsviczian
+// perspectiveX: vertical strips — left/right trapezoid, varying strip HEIGHT and WIDTH. //zsviczian
+// When both non-zero the X warp is applied first to a temp canvas, then Y warp follows. //zsviczian
+const _applyHorizStripWarp = ( //zsviczian
+  srcCanvas: HTMLCanvasElement, //zsviczian
+  destCtx: CanvasRenderingContext2D, //zsviczian
+  dstX: number, dstY: number, dstW: number, dstH: number, //zsviczian
+  pY: number, //zsviczian
+): void => { //zsviczian
+  const srcW = srcCanvas.width; //zsviczian
+  const srcH = srcCanvas.height; //zsviczian
+  const shrinkY = Math.abs(pY) * dstW * 0.25; //zsviczian
+  // Trapezoid: pY>0 → top narrows; pY<0 → bottom narrows //zsviczian
+  const tlX = dstX + (pY > 0 ? shrinkY : 0); //zsviczian
+  const trX = dstX + dstW - (pY > 0 ? shrinkY : 0); //zsviczian
+  const blX = dstX + (pY < 0 ? shrinkY : 0); //zsviczian
+  const brX = dstX + dstW - (pY < 0 ? shrinkY : 0); //zsviczian
+  const tlY = dstY + (pY > 0 ? shrinkY * 0.5 : 0); //zsviczian
+  const blY = dstY + dstH - (pY < 0 ? shrinkY * 0.5 : 0); //zsviczian
+  const numStrips = Math.max(32, Math.min(128, Math.floor(srcH / 4))); //zsviczian
+  for (let i = 0; i < numStrips; i++) { //zsviczian
+    const t0 = i / numStrips; //zsviczian
+    const t1 = (i + 1) / numStrips; //zsviczian
+    const sy = t0 * srcH; //zsviczian
+    const sh = (t1 - t0) * srcH; //zsviczian
+    const dstLX0 = tlX + t0 * (blX - tlX); //zsviczian
+    const dstRX0 = trX + t0 * (brX - trX); //zsviczian
+    const dstLX1 = tlX + t1 * (blX - tlX); //zsviczian
+    const dstRX1 = trX + t1 * (brX - trX); //zsviczian
+    const dstY0 = tlY + t0 * (blY - tlY); //zsviczian
+    const dstY1 = tlY + t1 * (blY - tlY); //zsviczian
+    const dstWTop = dstRX0 - dstLX0; //zsviczian
+    const dstWBot = dstRX1 - dstLX1; //zsviczian
+    const dstHStrip = dstY1 - dstY0; //zsviczian
+    if (dstWTop <= 0 || dstHStrip <= 0) { continue; } //zsviczian
+    const scaleX = dstWTop / srcW; //zsviczian
+    const scaleY = dstHStrip / sh; //zsviczian
+    const skewX = (dstWBot - dstWTop) / srcH; //zsviczian
+    destCtx.save(); //zsviczian
+    destCtx.setTransform(scaleX, 0, skewX, scaleY, dstLX0, dstY0); //zsviczian
+    destCtx.drawImage(srcCanvas, 0, sy, srcW, sh, 0, 0, srcW, sh); //zsviczian
+    destCtx.restore(); //zsviczian
+  } //zsviczian
+}; //zsviczian
+//zsviczian
+// perspectiveX: vertical strips. pX>0 → right side shorter; pX<0 → left side shorter. //zsviczian
+// Each strip's HEIGHT and WIDTH both scale with distance, matching perspectiveY behaviour. //zsviczian
+const _applyVertStripWarp = ( //zsviczian
+  srcCanvas: HTMLCanvasElement, //zsviczian
+  destCtx: CanvasRenderingContext2D, //zsviczian
+  dstX: number, dstY: number, dstW: number, dstH: number, //zsviczian
+  pX: number, //zsviczian
+): void => { //zsviczian
+  const srcW = srcCanvas.width; //zsviczian
+  const srcH = srcCanvas.height; //zsviczian
+  const absPX = Math.abs(pX); //zsviczian
+  // scaleFn(t): relative size at source fraction t (0=left,1=right) //zsviczian
+  // pX>0 → right vanishes: scaleFn = 1 - t*absPX //zsviczian
+  // pX<0 → left vanishes:  scaleFn = 1 - (1-t)*absPX //zsviczian
+  // Integral of scaleFn from 0→1 = 1 - absPX/2; normalise so strips sum to dstW //zsviczian
+  const normFactor = 1 / (1 - absPX / 2); //zsviczian
+  // y-shear per source pixel: d(topY)/d(srcX) = pX*dstH/(2*srcW) //zsviczian
+  const yShearPerSrcX = pX * dstH / (2 * srcW); //zsviczian
+  const numStrips = Math.max(32, Math.min(128, Math.floor(srcW / 4))); //zsviczian
+  const srcStripW = srcW / numStrips; //zsviczian
+  let xAccum = dstX; //zsviczian
+  for (let i = 0; i < numStrips; i++) { //zsviczian
+    const t0 = i / numStrips; //zsviczian
+    const scaleFn = pX > 0 ? (1 - t0 * absPX) : (1 - (1 - t0) * absPX); //zsviczian
+    const dstStripW = (dstW / numStrips) * scaleFn * normFactor; //zsviczian
+    const dstStripH = dstH * scaleFn; //zsviczian
+    // topY: centered vertically, = dstY + (dstH - dstStripH)/2 //zsviczian
+    const topY = dstY + (dstH - dstStripH) / 2; //zsviczian
+    const srcX = t0 * srcW; //zsviczian
+    if (dstStripH <= 0 || dstStripW <= 0) { xAccum += dstStripW; continue; } //zsviczian
+    // setTransform(a,b,c,d,e,f): dest = (a*sx + c*sy + e, b*sx + d*sy + f) //zsviczian
+    const a = dstStripW / srcStripW; // horizontal scale //zsviczian
+    const b = yShearPerSrcX;         // y-shear: top edge slopes as x increases //zsviczian
+    const d = dstStripH / srcH;      // vertical scale (varies per strip) //zsviczian
+    destCtx.save(); //zsviczian
+    destCtx.setTransform(a, b, 0, d, xAccum, topY); //zsviczian
+    destCtx.drawImage(srcCanvas, srcX, 0, srcStripW, srcH, 0, 0, srcStripW, srcH); //zsviczian
+    destCtx.restore(); //zsviczian
+    xAccum += dstStripW; //zsviczian
+  } //zsviczian
+}; //zsviczian
+//zsviczian
+const drawPerspectiveWarped = ( //zsviczian
+  srcCanvas: HTMLCanvasElement, //zsviczian
+  destCtx: CanvasRenderingContext2D, //zsviczian
+  dstX: number, dstY: number, dstW: number, dstH: number, //zsviczian
+  perspectiveX: number, //zsviczian
+  perspectiveY: number, //zsviczian
+): void => { //zsviczian
+  if (perspectiveX !== 0 && perspectiveY !== 0) { //zsviczian
+    // Apply X first to a same-size temp canvas, then Y to dest //zsviczian
+    const srcW = srcCanvas.width; //zsviczian
+    const srcH = srcCanvas.height; //zsviczian
+    const temp = document.createElement("canvas"); //zsviczian
+    temp.width = srcW; //zsviczian
+    temp.height = srcH; //zsviczian
+    _applyVertStripWarp(srcCanvas, temp.getContext("2d")!, 0, 0, srcW, srcH, perspectiveX); //zsviczian
+    _applyHorizStripWarp(temp, destCtx, dstX, dstY, dstW, dstH, perspectiveY); //zsviczian
+  } else if (perspectiveX !== 0) { //zsviczian
+    _applyVertStripWarp(srcCanvas, destCtx, dstX, dstY, dstW, dstH, perspectiveX); //zsviczian
+  } else { //zsviczian
+    _applyHorizStripWarp(srcCanvas, destCtx, dstX, dstY, dstW, dstH, perspectiveY); //zsviczian
+  } //zsviczian
+}; //zsviczian
+
 const drawElementFromCanvas = (
   elementWithCanvas: ExcalidrawElementWithCanvas,
   context: CanvasRenderingContext2D,
@@ -837,15 +948,39 @@ const drawElementFromCanvas = (
     // revert afterwards we don't have account for it during drawing
     context.translate(-cx, -cy);
 
-    context.drawImage(
-      elementWithCanvas.canvas!,
-      (x1 + appState.scrollX) * window.devicePixelRatio -
-        (padding * elementWithCanvas.scale) / elementWithCanvas.scale,
-      (y1 + appState.scrollY) * window.devicePixelRatio -
-        (padding * elementWithCanvas.scale) / elementWithCanvas.scale,
-      elementWithCanvas.canvas!.width / elementWithCanvas.scale,
-      elementWithCanvas.canvas!.height / elementWithCanvas.scale,
-    );
+    if ( //zsviczian
+      isTextElement(element) && //zsviczian
+      !element.containerId && //zsviczian
+      ((element.perspectiveX ?? 0) !== 0 || (element.perspectiveY ?? 0) !== 0) //zsviczian
+    ) { //zsviczian
+      const srcCanvas = elementWithCanvas.canvas!; //zsviczian
+      const dstX = (x1 + appState.scrollX) * window.devicePixelRatio - //zsviczian
+        (padding * elementWithCanvas.scale) / elementWithCanvas.scale; //zsviczian
+      const dstY = (y1 + appState.scrollY) * window.devicePixelRatio - //zsviczian
+        (padding * elementWithCanvas.scale) / elementWithCanvas.scale; //zsviczian
+      const dstW = srcCanvas.width / elementWithCanvas.scale; //zsviczian
+      const dstH = srcCanvas.height / elementWithCanvas.scale; //zsviczian
+      const tempCanvas = document.createElement("canvas"); //zsviczian
+      tempCanvas.width = srcCanvas.width; //zsviczian
+      tempCanvas.height = srcCanvas.height; //zsviczian
+      const tempCtx = tempCanvas.getContext("2d")!; //zsviczian
+      drawPerspectiveWarped( //zsviczian
+        srcCanvas, tempCtx, //zsviczian
+        0, 0, srcCanvas.width, srcCanvas.height, //zsviczian
+        element.perspectiveX ?? 0, element.perspectiveY ?? 0, //zsviczian
+      ); //zsviczian
+      context.drawImage(tempCanvas, dstX, dstY, dstW, dstH); //zsviczian
+    } else { //zsviczian
+      context.drawImage(
+        elementWithCanvas.canvas!,
+        (x1 + appState.scrollX) * window.devicePixelRatio -
+          (padding * elementWithCanvas.scale) / elementWithCanvas.scale,
+        (y1 + appState.scrollY) * window.devicePixelRatio -
+          (padding * elementWithCanvas.scale) / elementWithCanvas.scale,
+        elementWithCanvas.canvas!.width / elementWithCanvas.scale,
+        elementWithCanvas.canvas!.height / elementWithCanvas.scale,
+      );
+    } //zsviczian
 
     if (
       import.meta.env.VITE_APP_DEBUG_ENABLE_TEXT_CONTAINER_BOUNDING_BOX ===

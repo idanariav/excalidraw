@@ -298,6 +298,8 @@ export type ExcalidrawTextElement = _ExcalidrawElementBase &
     textOutlineColor: string; //zsviczian
     textOutlineWidth: number; //zsviczian
     textOutlineOpacity: number; //zsviczian
+    perspectiveX: number; //zsviczian
+    perspectiveY: number; //zsviczian
   }>;
 
 export type ExcalidrawBindableElement =

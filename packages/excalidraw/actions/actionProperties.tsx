@@ -3121,3 +3121,89 @@ export const actionChangeTextOutlineOpacity = register<number>({ //zsviczian
     ); //zsviczian
   }, //zsviczian
 }); //zsviczian
+
+export const actionChangeTextPerspectiveX = register<number>({ //zsviczian
+  name: "changeTextPerspectiveX", //zsviczian
+  label: "labels.textPerspectiveX", //zsviczian
+  trackEvent: false, //zsviczian
+  perform: (elements, appState, value) => { //zsviczian
+    if (value == null) { return false; } //zsviczian
+    return { //zsviczian
+      elements: changeProperty( //zsviczian
+        elements, //zsviczian
+        appState, //zsviczian
+        (el) => { //zsviczian
+          if (!isTextElement(el)) { return el; } //zsviczian
+          return newElementWith(el, { perspectiveX: value / 100 }); //zsviczian
+        }, //zsviczian
+        true, //zsviczian
+      ), //zsviczian
+      appState: { ...appState, currentItemTextPerspectiveX: value }, //zsviczian
+      captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+    }; //zsviczian
+  }, //zsviczian
+  PanelComponent: ({ elements, appState, updateData, app }) => { //zsviczian
+    const currentValue = getFormValue( //zsviczian
+      elements, //zsviczian
+      app, //zsviczian
+      (element) => isTextElement(element) ? Math.round((element.perspectiveX ?? 0) * 100) : null, //zsviczian
+      true, //zsviczian
+      (hasSelection) => hasSelection ? null : appState.currentItemTextPerspectiveX, //zsviczian
+    ); //zsviczian
+    return ( //zsviczian
+      <Range //zsviczian
+        label={t("labels.textPerspectiveX")} //zsviczian
+        value={currentValue ?? appState.currentItemTextPerspectiveX} //zsviczian
+        hasCommonValue={currentValue !== null} //zsviczian
+        onChange={updateData} //zsviczian
+        min={-100} //zsviczian
+        max={100} //zsviczian
+        step={5} //zsviczian
+        testId="text-perspective-x" //zsviczian
+      /> //zsviczian
+    ); //zsviczian
+  }, //zsviczian
+}); //zsviczian
+
+export const actionChangeTextPerspectiveY = register<number>({ //zsviczian
+  name: "changeTextPerspectiveY", //zsviczian
+  label: "labels.textPerspectiveY", //zsviczian
+  trackEvent: false, //zsviczian
+  perform: (elements, appState, value) => { //zsviczian
+    if (value == null) { return false; } //zsviczian
+    return { //zsviczian
+      elements: changeProperty( //zsviczian
+        elements, //zsviczian
+        appState, //zsviczian
+        (el) => { //zsviczian
+          if (!isTextElement(el)) { return el; } //zsviczian
+          return newElementWith(el, { perspectiveY: value / 100 }); //zsviczian
+        }, //zsviczian
+        true, //zsviczian
+      ), //zsviczian
+      appState: { ...appState, currentItemTextPerspectiveY: value }, //zsviczian
+      captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+    }; //zsviczian
+  }, //zsviczian
+  PanelComponent: ({ elements, appState, updateData, app }) => { //zsviczian
+    const currentValue = getFormValue( //zsviczian
+      elements, //zsviczian
+      app, //zsviczian
+      (element) => isTextElement(element) ? Math.round((element.perspectiveY ?? 0) * 100) : null, //zsviczian
+      true, //zsviczian
+      (hasSelection) => hasSelection ? null : appState.currentItemTextPerspectiveY, //zsviczian
+    ); //zsviczian
+    return ( //zsviczian
+      <Range //zsviczian
+        label={t("labels.textPerspectiveY")} //zsviczian
+        value={currentValue ?? appState.currentItemTextPerspectiveY} //zsviczian
+        hasCommonValue={currentValue !== null} //zsviczian
+        onChange={updateData} //zsviczian
+        min={-100} //zsviczian
+        max={100} //zsviczian
+        step={5} //zsviczian
+        testId="text-perspective-y" //zsviczian
+      /> //zsviczian
+    ); //zsviczian
+  }, //zsviczian
+}); //zsviczian

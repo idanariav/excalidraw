@@ -279,6 +279,8 @@ export const SelectedShapeActions = ({
           {renderAction("changeTextOutlineWidth")} {/*//zsviczian*/}
           {targetElements.some((el) => isTextElement(el) && el.textOutlineWidth > 0) && //zsviczian
             renderAction("changeTextOutlineOpacity")} {/*//zsviczian*/}
+          {renderAction("changeTextPerspectiveX")} {/*//zsviczian*/}
+          {renderAction("changeTextPerspectiveY")} {/*//zsviczian*/}
         </>
       )}
 
@@ -679,6 +681,8 @@ const CombinedTextProperties = ({
                   {renderAction("changeTextOutlineWidth")}
                   {targetElements.some((el) => isTextElement(el) && el.textOutlineWidth > 0) && //zsviczian
                     renderAction("changeTextOutlineOpacity")}
+                  {renderAction("changeTextPerspectiveX")} {/*//zsviczian*/}
+                  {renderAction("changeTextPerspectiveY")} {/*//zsviczian*/}
                 </>
               )}
             </div>

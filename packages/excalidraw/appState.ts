@@ -46,6 +46,8 @@ export const getDefaultAppState = (): Omit<
     currentItemTextOutlineColor: "transparent", //zsviczian
     currentItemTextOutlineWidth: 0, //zsviczian
     currentItemTextOutlineOpacity: 100, //zsviczian
+    currentItemTextPerspectiveX: 0, //zsviczian
+    currentItemTextPerspectiveY: 0, //zsviczian
     currentHoveredFontFamily: null,
     currentItemFrameRole: null, //zsviczian
     currentItemArcGapAngle: 0, //zsviczian
@@ -209,6 +211,8 @@ const APP_STATE_STORAGE_CONF = (<
   currentItemTextOutlineColor: { browser: true, export: false, server: false }, //zsviczian
   currentItemTextOutlineWidth: { browser: true, export: false, server: false }, //zsviczian
   currentItemTextOutlineOpacity: { browser: true, export: false, server: false }, //zsviczian
+  currentItemTextPerspectiveX: { browser: true, export: false, server: false }, //zsviczian
+  currentItemTextPerspectiveY: { browser: true, export: false, server: false }, //zsviczian
   currentHoveredFontFamily: { browser: false, export: false, server: false },
   currentItemFrameRole: { browser: true, export: false, server: false }, //zsviczian
   currentItemArcGapAngle: { browser: true, export: false, server: false }, //zsviczian

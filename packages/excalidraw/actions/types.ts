@@ -151,6 +151,8 @@ export type ActionName =
   | "changeTextOutlineColor" //zsviczian
   | "changeTextOutlineWidth" //zsviczian
   | "changeTextOutlineOpacity" //zsviczian
+  | "changeTextPerspectiveX" //zsviczian
+  | "changeTextPerspectiveY" //zsviczian
   | "commandPalette"
   | "autoResize"
   | "elementStats"

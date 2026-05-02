@@ -324,6 +324,8 @@ export const newTextElement = (
     textOutlineColor?: string; //zsviczian
     textOutlineWidth?: number; //zsviczian
     textOutlineOpacity?: number; //zsviczian
+    perspectiveX?: number; //zsviczian
+    perspectiveY?: number; //zsviczian
   } & ElementConstructorOpts,
 ): NonDeleted<ExcalidrawTextElement> => {
   const fontFamily = opts.fontFamily || DEFAULT_FONT_FAMILY;
@@ -363,6 +365,8 @@ export const newTextElement = (
     textOutlineColor: opts.textOutlineColor ?? "transparent", //zsviczian
     textOutlineWidth: opts.textOutlineWidth ?? 0, //zsviczian
     textOutlineOpacity: opts.textOutlineOpacity ?? 100, //zsviczian
+    perspectiveX: opts.perspectiveX ?? 0, //zsviczian
+    perspectiveY: opts.perspectiveY ?? 0, //zsviczian
   };
 
   const textElement: ExcalidrawTextElement = newElementWith(

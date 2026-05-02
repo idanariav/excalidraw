@@ -32,6 +32,8 @@ export {
   actionChangeTextOutlineColor, //zsviczian
   actionChangeTextOutlineWidth, //zsviczian
   actionChangeTextOutlineOpacity, //zsviczian
+  actionChangeTextPerspectiveX, //zsviczian
+  actionChangeTextPerspectiveY, //zsviczian
 } from "./actionProperties";
 
 export {

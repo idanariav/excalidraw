@@ -65,6 +65,8 @@
     "textOutlineColor": "Outline color",
     "textOutlineWidth": "Outline width",
     "textOutlineOpacity": "Outline opacity",
+    "textPerspectiveX": "Perspective X",
+    "textPerspectiveY": "Perspective Y",
     "none": "None",
     "textAlign": "Text align",
     "edges": "Edges",

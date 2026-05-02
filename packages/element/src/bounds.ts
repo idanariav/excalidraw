@@ -211,6 +211,35 @@ export class ElementBounds {
       const ww = Math.hypot(w * cos, h * sin);
       const hh = Math.hypot(h * cos, w * sin);
       bounds = [cx - ww, cy - hh, cx + ww, cy + hh];
+    } else if ( //zsviczian
+      isTextElement(element) && //zsviczian
+      !element.containerId && //zsviczian
+      ((element.perspectiveX ?? 0) !== 0 || (element.perspectiveY ?? 0) !== 0) //zsviczian
+    ) { //zsviczian
+      const dstW = x2 - x1; //zsviczian
+      const dstH = y2 - y1; //zsviczian
+      const shrinkX = Math.abs(element.perspectiveX ?? 0) * dstH * 0.5; //zsviczian
+      const shrinkY = Math.abs(element.perspectiveY ?? 0) * dstW * 0.25; //zsviczian
+      const pX = element.perspectiveX ?? 0; //zsviczian
+      const pY = element.perspectiveY ?? 0; //zsviczian
+      const tlX = x1 + (pX < 0 ? shrinkX : 0) + (pY > 0 ? shrinkY : 0); //zsviczian
+      const trX = x2 - (pX > 0 ? shrinkX : 0) - (pY > 0 ? shrinkY : 0); //zsviczian
+      const blX = x1 + (pX > 0 ? shrinkX : 0) + (pY < 0 ? shrinkY : 0); //zsviczian
+      const brX = x2 - (pX < 0 ? shrinkX : 0) - (pY < 0 ? shrinkY : 0); //zsviczian
+      const tlY = y1 + (pY > 0 ? shrinkY * 0.5 : 0); //zsviczian
+      const trY = y1 + (pY > 0 ? shrinkY * 0.5 : 0); //zsviczian
+      const blY = y2 - (pY < 0 ? shrinkY * 0.5 : 0); //zsviczian
+      const brY = y2 - (pY < 0 ? shrinkY * 0.5 : 0); //zsviczian
+      const [rx11, ry11] = pointRotateRads(pointFrom(tlX, tlY), pointFrom(cx, cy), element.angle); //zsviczian
+      const [rx12, ry12] = pointRotateRads(pointFrom(trX, trY), pointFrom(cx, cy), element.angle); //zsviczian
+      const [rx22, ry22] = pointRotateRads(pointFrom(brX, brY), pointFrom(cx, cy), element.angle); //zsviczian
+      const [rx21, ry21] = pointRotateRads(pointFrom(blX, blY), pointFrom(cx, cy), element.angle); //zsviczian
+      bounds = [ //zsviczian
+        Math.min(rx11, rx12, rx22, rx21), //zsviczian
+        Math.min(ry11, ry12, ry22, ry21), //zsviczian
+        Math.max(rx11, rx12, rx22, rx21), //zsviczian
+        Math.max(ry11, ry12, ry22, ry21), //zsviczian
+      ]; //zsviczian
     } else {
       const [x11, y11] = pointRotateRads(
         pointFrom(x1, y1),

@@ -799,11 +799,18 @@ const renderElementToSvg = (
           node.setAttribute("fill-opacity", `${opacity}`);
         }
 
+        const perspX = element.perspectiveX ?? 0; //zsviczian
+        const perspY = element.perspectiveY ?? 0; //zsviczian
+        const skewXDeg = perspX * 25; //zsviczian
+        const skewYDeg = perspY * 15; //zsviczian
+        const perspTransform = (perspX !== 0 || perspY !== 0) //zsviczian
+          ? ` skewX(${skewXDeg}) skewY(${skewYDeg})` //zsviczian
+          : ""; //zsviczian
         node.setAttribute(
           "transform",
           `translate(${offsetX || 0} ${
             offsetY || 0
-          }) rotate(${degree} ${cx} ${cy})`,
+          }) rotate(${degree} ${cx} ${cy})${perspTransform}`,
         );
         const lines = element.text.replace(/\r\n?/g, "\n").split("\n");
         const lineHeightPx = getLineHeightInPx(

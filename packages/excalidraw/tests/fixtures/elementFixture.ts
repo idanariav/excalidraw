@@ -62,10 +62,16 @@ export const textFixture: ExcalidrawElement = {
   fontFamily: DEFAULT_FONT_FAMILY,
   strokeColor: "#1e1e1e",
   text: "original text",
+  rawText: "original text", //zsviczian
   originalText: "original text",
   textAlign: "left",
   verticalAlign: "top",
   containerId: null,
   lineHeight: 1.25 as any,
   autoResize: false,
+  textOutlineColor: "transparent", //zsviczian
+  textOutlineWidth: 0, //zsviczian
+  textOutlineOpacity: 100, //zsviczian
+  perspectiveX: 0, //zsviczian
+  perspectiveY: 0, //zsviczian
 };

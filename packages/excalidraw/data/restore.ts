@@ -412,6 +412,8 @@ export const restoreElement = (
         textOutlineColor: (element as any).textOutlineColor ?? "transparent", //zsviczian
         textOutlineWidth: (element as any).textOutlineWidth ?? 0, //zsviczian
         textOutlineOpacity: (element as any).textOutlineOpacity ?? 100, //zsviczian
+        perspectiveX: (element as any).perspectiveX ?? 0, //zsviczian
+        perspectiveY: (element as any).perspectiveY ?? 0, //zsviczian
       });
 
       // if empty text, mark as deleted. We keep in array

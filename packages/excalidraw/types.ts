@@ -403,6 +403,8 @@ export interface AppState {
   currentItemTextOutlineColor: string; //zsviczian
   currentItemTextOutlineWidth: number; //zsviczian
   currentItemTextOutlineOpacity: number; //zsviczian
+  currentItemTextPerspectiveX: number; //zsviczian
+  currentItemTextPerspectiveY: number; //zsviczian
   currentItemStartArrowhead: Arrowhead | null;
   currentItemEndArrowhead: Arrowhead | null;
   currentHoveredFontFamily: FontFamilyValues | null;
