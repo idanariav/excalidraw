@@ -106,6 +106,7 @@ import {
   FillHachureIcon,
   FillCrossHatchIcon,
   FillSolidIcon,
+  FillGradientIcon, //zsviczian
   SloppinessArchitectIcon,
   SloppinessArtistIcon,
   SloppinessCartoonistIcon,
@@ -564,6 +565,12 @@ export const actionChangeFillStyle = register<ExcalidrawElement["fillStyle"]>({
                 icon: FillSolidIcon,
                 testId: `fill-solid`,
               },
+              { //zsviczian
+                value: "gradient", //zsviczian
+                text: t("labels.gradient"), //zsviczian
+                icon: FillGradientIcon, //zsviczian
+                testId: "fill-gradient", //zsviczian
+              }, //zsviczian
             ]}
             value={getFormValue(
               elements,
@@ -589,6 +596,53 @@ export const actionChangeFillStyle = register<ExcalidrawElement["fillStyle"]>({
     );
   },
 });
+
+export const actionChangeGradientColor = register<Pick<AppState, "currentItemGradientColor">>({ //zsviczian
+  name: "changeGradientColor", //zsviczian
+  label: "labels.gradientColor", //zsviczian
+  trackEvent: false, //zsviczian
+  perform: (elements, appState, value) => { //zsviczian
+    return { //zsviczian
+      elements: changeProperty(elements, appState, (el) => //zsviczian
+        newElementWith(el, { gradientColor: value?.currentItemGradientColor }), //zsviczian
+      ), //zsviczian
+      appState: { //zsviczian
+        ...appState, //zsviczian
+        ...value, //zsviczian
+      }, //zsviczian
+      captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+    }; //zsviczian
+  }, //zsviczian
+  PanelComponent: ({ elements, appState, updateData, app }) => ( //zsviczian
+    <fieldset> {/* //zsviczian */}
+      <legend>{t("labels.gradientColor")}</legend> {/* //zsviczian */}
+      <ColorPicker //zsviczian
+        topPicks={ //zsviczian
+          appState.colorPalette?.topPicks?.elementBackground ?? //zsviczian
+          DEFAULT_ELEMENT_BACKGROUND_PICKS //zsviczian
+        } //zsviczian
+        palette={ //zsviczian
+          appState.colorPalette?.elementBackground ?? //zsviczian
+          DEFAULT_ELEMENT_BACKGROUND_COLOR_PALETTE //zsviczian
+        } //zsviczian
+        type="elementBackground" //zsviczian
+        label={t("labels.gradientColor")} //zsviczian
+        color={getFormValue( //zsviczian
+          elements, //zsviczian
+          app, //zsviczian
+          (element) => element.gradientColor ?? "transparent", //zsviczian
+          true, //zsviczian
+          (hasSelection) => //zsviczian
+            !hasSelection ? appState.currentItemGradientColor ?? "transparent" : null, //zsviczian
+        )} //zsviczian
+        onChange={(color) => updateData({ currentItemGradientColor: color })} //zsviczian
+        elements={elements} //zsviczian
+        appState={appState} //zsviczian
+        updateData={updateData} //zsviczian
+      /> //zsviczian
+    </fieldset>
+  ), //zsviczian
+}); //zsviczian
 
 // zsviczian - custom numeric input with up/down spinner buttons
 const CustomSizeInput = ({

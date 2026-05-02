@@ -243,6 +243,9 @@ export const generateRoughOptions = (
     case "diamond":
     case "triangle": //zsviczian
     case "ellipse": {
+      if (element.fillStyle === "gradient") { //zsviczian
+        return options; //zsviczian
+      } //zsviczian
       options.fillStyle = element.fillStyle;
       options.fill = isTransparent(element.backgroundColor)
         ? undefined
@@ -257,6 +260,9 @@ export const generateRoughOptions = (
     case "line":
     case "freedraw": {
       if (isPathALoop(element.points)) {
+        if (element.fillStyle === "gradient") { //zsviczian
+          return options; //zsviczian
+        } //zsviczian
         options.fillStyle = element.fillStyle;
         options.fill =
           element.backgroundColor === "transparent"

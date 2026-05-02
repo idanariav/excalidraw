@@ -1171,6 +1171,24 @@ export const FillSolidIcon = createIcon(
   { ...modifiedTablerIconProps, fill: "var(--icon-fill-color)" },
 );
 
+export const FillGradientIcon = createIcon( //zsviczian
+  <> {/* //zsviczian */}
+    <defs> {/* //zsviczian */}
+      <linearGradient id="FillGradientIconDef" x1="0%" y1="0%" x2="0%" y2="100%"> {/* //zsviczian */}
+        <stop offset="0%" stopColor="transparent" /> {/* //zsviczian */}
+        <stop offset="100%" stopColor="var(--icon-fill-color)" /> {/* //zsviczian */}
+      </linearGradient> {/* //zsviczian */}
+    </defs> {/* //zsviczian */}
+    <path //zsviczian
+      d="M4.91 2.625h10.18a2.284 2.284 0 0 1 2.285 2.284v10.182a2.284 2.284 0 0 1-2.284 2.284H4.909a2.284 2.284 0 0 1-2.284-2.284V4.909a2.284 2.284 0 0 1 2.284-2.284Z" //zsviczian
+      stroke="var(--icon-fill-color)" //zsviczian
+      strokeWidth="1.25" //zsviczian
+      fill="url(#FillGradientIconDef)" //zsviczian
+    /> {/* //zsviczian */}
+  </>, //zsviczian
+  { ...modifiedTablerIconProps, fill: "var(--icon-fill-color)" }, //zsviczian
+); //zsviczian
+
 export const StrokeWidthThinIcon = createIcon(
   //zsviczian
   <>

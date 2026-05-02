@@ -10,6 +10,7 @@ import {
   getVerticalOffset,
   applyDarkModeFilter,
   MIME_TYPES,
+  isTransparent, //zsviczian
 } from "@excalidraw/common";
 import { normalizeLink, toValidURL } from "@excalidraw/common";
 import { hashString } from "@excalidraw/element";
@@ -30,7 +31,7 @@ import {
 
 import { getContainingFrame } from "@excalidraw/element";
 
-import { getCornerRadius, isPathALoop } from "@excalidraw/element";
+import { getCornerRadius, isPathALoop, getDiamondPoints, getTrianglePoints } from "@excalidraw/element"; //zsviczian
 
 import { ShapeCache } from "@excalidraw/element";
 
@@ -48,6 +49,48 @@ import type { AppState, BinaryFiles } from "../types";
 import type { Drawable } from "roughjs/bin/core";
 import type { RoughSVG } from "roughjs/bin/svg";
 
+
+const addGradientDef = ( //zsviczian
+  element: NonDeletedExcalidrawElement, //zsviczian
+  svgRoot: SVGElement, //zsviczian
+  isDarkMode: boolean, //zsviczian
+): string => { //zsviczian
+  const gradientId = `gradient-${element.id}`; //zsviczian
+  const ownerDoc = svgRoot.ownerDocument!; //zsviczian
+  let defs = svgRoot.querySelector("defs"); //zsviczian
+  if (!defs) { //zsviczian
+    defs = ownerDoc.createElementNS(SVG_NS, "defs"); //zsviczian
+    svgRoot.prepend(defs); //zsviczian
+  } //zsviczian
+  if (!defs.querySelector(`#${gradientId}`)) { //zsviczian
+    const grad = ownerDoc.createElementNS(SVG_NS, "linearGradient"); //zsviczian
+    grad.setAttribute("id", gradientId); //zsviczian
+    grad.setAttribute("x1", "0%"); //zsviczian
+    grad.setAttribute("y1", "0%"); //zsviczian
+    grad.setAttribute("x2", "0%"); //zsviczian
+    grad.setAttribute("y2", "100%"); //zsviczian
+    const startColor = element.gradientColor ?? "transparent"; //zsviczian
+    const resolvedStart = //zsviczian
+      startColor === "transparent" //zsviczian
+        ? "transparent" //zsviczian
+        : isDarkMode //zsviczian
+        ? applyDarkModeFilter(startColor) //zsviczian
+        : startColor; //zsviczian
+    const resolvedEnd = isDarkMode //zsviczian
+      ? applyDarkModeFilter(element.backgroundColor) //zsviczian
+      : element.backgroundColor; //zsviczian
+    const stop0 = ownerDoc.createElementNS(SVG_NS, "stop"); //zsviczian
+    stop0.setAttribute("offset", "0%"); //zsviczian
+    stop0.setAttribute("stop-color", resolvedStart); //zsviczian
+    const stop1 = ownerDoc.createElementNS(SVG_NS, "stop"); //zsviczian
+    stop1.setAttribute("offset", "100%"); //zsviczian
+    stop1.setAttribute("stop-color", resolvedEnd); //zsviczian
+    grad.appendChild(stop0); //zsviczian
+    grad.appendChild(stop1); //zsviczian
+    defs.appendChild(grad); //zsviczian
+  } //zsviczian
+  return gradientId; //zsviczian
+}; //zsviczian
 
 const roughSVGDrawWithPrecision = (
   rsvg: RoughSVG,
@@ -169,15 +212,65 @@ const renderElementToSvg = (
         }) rotate(${degree} ${cx} ${cy})`,
       );
 
+      const svgNodes: SVGElement[] = [node]; //zsviczian
+      if (element.fillStyle === "gradient" && !isTransparent(element.backgroundColor)) { //zsviczian
+        const gradientId = addGradientDef(element, svgRoot, renderConfig.theme === THEME.DARK); //zsviczian
+        const ownerDoc = svgRoot.ownerDocument!; //zsviczian
+        const { width: w, height: h } = element; //zsviczian
+        let fillNode: SVGElement; //zsviczian
+        if (element.type === "ellipse") { //zsviczian
+          fillNode = ownerDoc.createElementNS(SVG_NS, "ellipse"); //zsviczian
+          fillNode.setAttribute("cx", String(w / 2)); //zsviczian
+          fillNode.setAttribute("cy", String(h / 2)); //zsviczian
+          fillNode.setAttribute("rx", String(w / 2)); //zsviczian
+          fillNode.setAttribute("ry", String(h / 2)); //zsviczian
+        } else if (element.type === "diamond") { //zsviczian
+          const [topX, topY, rightX, rightY, bottomX, bottomY, leftX, leftY] = getDiamondPoints(element); //zsviczian
+          fillNode = ownerDoc.createElementNS(SVG_NS, "polygon"); //zsviczian
+          fillNode.setAttribute("points", `${topX},${topY} ${rightX},${rightY} ${bottomX},${bottomY} ${leftX},${leftY}`); //zsviczian
+        } else if (element.type === "triangle") { //zsviczian
+          const [apexX, apexY, brX, brY, blX, blY] = getTrianglePoints(element); //zsviczian
+          fillNode = ownerDoc.createElementNS(SVG_NS, "polygon"); //zsviczian
+          fillNode.setAttribute("points", `${apexX},${apexY} ${brX},${brY} ${blX},${blY}`); //zsviczian
+        } else { //zsviczian
+          fillNode = ownerDoc.createElementNS(SVG_NS, "rect"); //zsviczian
+          fillNode.setAttribute("x", "0"); //zsviczian
+          fillNode.setAttribute("y", "0"); //zsviczian
+          fillNode.setAttribute("width", String(w)); //zsviczian
+          fillNode.setAttribute("height", String(h)); //zsviczian
+          if (element.roundness) { //zsviczian
+            const r = getCornerRadius(Math.min(w, h), element); //zsviczian
+            fillNode.setAttribute("rx", String(r)); //zsviczian
+            fillNode.setAttribute("ry", String(r)); //zsviczian
+          } //zsviczian
+        } //zsviczian
+        fillNode.setAttribute("fill", `url(#${gradientId})`); //zsviczian
+        fillNode.setAttribute("stroke", "none"); //zsviczian
+        fillNode.setAttribute( //zsviczian
+          "transform", //zsviczian
+          `translate(${offsetX || 0} ${offsetY || 0}) rotate(${degree} ${cx} ${cy})`, //zsviczian
+        ); //zsviczian
+        if (opacity !== 1) { //zsviczian
+          fillNode.setAttribute("fill-opacity", `${opacity}`); //zsviczian
+        } //zsviczian
+        svgNodes.unshift(fillNode); //zsviczian
+      } //zsviczian
+
       const g = maybeWrapNodesInFrameClipPath(
         element,
         root,
-        [node],
+        svgNodes, //zsviczian
         renderConfig.frameRendering,
         elementsMap,
       );
 
-      addToRoot(g || node, element);
+      if (g) { //zsviczian
+        addToRoot(g, element); //zsviczian
+      } else if (svgNodes.length > 1) { //zsviczian
+        svgNodes.forEach((n) => addToRoot(n, element)); //zsviczian
+      } else { //zsviczian
+        addToRoot(node, element); //zsviczian
+      } //zsviczian
       break;
     }
     case "iframe":

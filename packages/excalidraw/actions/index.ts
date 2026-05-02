@@ -12,6 +12,7 @@ export {
   actionChangeBackgroundColor,
   actionChangeStrokeWidth,
   actionChangeFillStyle,
+  actionChangeGradientColor, //zsviczian
   actionChangeSloppiness,
   actionChangeOpacity,
   actionChangeFontSize,

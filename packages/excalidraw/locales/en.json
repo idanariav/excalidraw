@@ -110,6 +110,8 @@
     "hachure": "Hachure",
     "zigzag": "Zigzag",
     "crossHatch": "Cross-hatch",
+    "gradient": "Gradient",
+    "gradientColor": "Gradient color",
     "extraThin": "Extra thin",
     "thin": "Thin",
     "bold": "Bold",

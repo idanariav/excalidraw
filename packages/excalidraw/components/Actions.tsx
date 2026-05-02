@@ -208,6 +208,9 @@ export const SelectedShapeActions = ({
         <div>{renderAction("changeBackgroundColor")}</div>
       )}
       {showFillIcons && renderAction("changeFillStyle")}
+      {(targetElements.some((el) => el.fillStyle === "gradient") || //zsviczian
+        appState.currentItemFillStyle === "gradient") && //zsviczian
+        renderAction("changeGradientColor")} {/* //zsviczian */}
 
       {(hasStrokeWidth(appState.activeTool.type) ||
         targetElements.some((element) => hasStrokeWidth(element.type))) &&
@@ -449,6 +452,9 @@ const CombinedShapeProperties = ({
           >
             <div className="selected-shape-actions">
               {showFillIcons && renderAction("changeFillStyle")}
+              {(targetElements.some((el) => el.fillStyle === "gradient") || //zsviczian
+                appState.currentItemFillStyle === "gradient") && //zsviczian
+                renderAction("changeGradientColor")} {/* //zsviczian */}
               {(hasStrokeWidth(appState.activeTool.type) ||
                 targetElements.some((element) =>
                   hasStrokeWidth(element.type),

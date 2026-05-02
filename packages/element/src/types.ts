@@ -16,7 +16,7 @@ import type {
 } from "@excalidraw/common/utility-types";
 
 export type ChartType = "bar" | "line" | "radar";
-export type FillStyle = "hachure" | "cross-hatch" | "solid" | "zigzag";
+export type FillStyle = "hachure" | "cross-hatch" | "solid" | "zigzag" | "gradient"; //zsviczian
 export type FontFamilyKeys = keyof typeof FONT_FAMILY;
 export type FontFamilyValues = typeof FONT_FAMILY[FontFamilyKeys];
 export type Theme = typeof THEME[keyof typeof THEME];
@@ -78,6 +78,7 @@ type _ExcalidrawElementBase = Readonly<{
   updated: number;
   link: string | null;
   hasTextLink?: boolean; //zsviczian
+  gradientColor?: string; //zsviczian
   locked: boolean;
   customData?: Record<string, any>;
 }>;

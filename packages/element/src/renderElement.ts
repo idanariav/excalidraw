@@ -26,6 +26,7 @@ import {
   getWidthHeightLimit,
   applyDarkModeFilter,
   isIOS,
+  isTransparent, //zsviczian
 } from "@excalidraw/common";
 
 import type {
@@ -44,7 +45,7 @@ import type {
   InteractiveCanvasRenderConfig,
 } from "@excalidraw/excalidraw/scene/types";
 
-import { getElementAbsoluteCoords, getElementBounds } from "./bounds";
+import { getElementAbsoluteCoords, getElementBounds, getDiamondPoints, getTrianglePoints } from "./bounds"; //zsviczian
 import { getUncroppedImageElement } from "./cropElement";
 import { LinearElementEditor } from "./linearElementEditor";
 import {
@@ -388,6 +389,64 @@ const drawImagePlaceholder = (
   );
 };
 
+const drawGradientFill = ( //zsviczian
+  element: NonDeletedExcalidrawElement, //zsviczian
+  context: CanvasRenderingContext2D, //zsviczian
+  renderConfig: StaticCanvasRenderConfig, //zsviczian
+) => { //zsviczian
+  const { width: w, height: h } = element; //zsviczian
+  const isDark = renderConfig.theme === THEME.DARK; //zsviczian
+  const startColor = element.gradientColor ?? "transparent"; //zsviczian
+  const endColor = isDark //zsviczian
+    ? applyDarkModeFilter(element.backgroundColor) //zsviczian
+    : element.backgroundColor; //zsviczian
+  const resolvedStart = //zsviczian
+    startColor === "transparent" //zsviczian
+      ? "transparent" //zsviczian
+      : isDark //zsviczian
+      ? applyDarkModeFilter(startColor) //zsviczian
+      : startColor; //zsviczian
+  context.save(); //zsviczian
+  context.beginPath(); //zsviczian
+  switch (element.type) { //zsviczian
+    case "ellipse": //zsviczian
+      context.ellipse(w / 2, h / 2, w / 2, h / 2, 0, 0, Math.PI * 2); //zsviczian
+      break; //zsviczian
+    case "diamond": { //zsviczian
+      const [topX, topY, rightX, rightY, bottomX, bottomY, leftX, leftY] = //zsviczian
+        getDiamondPoints(element); //zsviczian
+      context.moveTo(topX, topY); //zsviczian
+      context.lineTo(rightX, rightY); //zsviczian
+      context.lineTo(bottomX, bottomY); //zsviczian
+      context.lineTo(leftX, leftY); //zsviczian
+      context.closePath(); //zsviczian
+      break; //zsviczian
+    } //zsviczian
+    case "triangle": { //zsviczian
+      const [apexX, apexY, brX, brY, blX, blY] = getTrianglePoints(element); //zsviczian
+      context.moveTo(apexX, apexY); //zsviczian
+      context.lineTo(brX, brY); //zsviczian
+      context.lineTo(blX, blY); //zsviczian
+      context.closePath(); //zsviczian
+      break; //zsviczian
+    } //zsviczian
+    default: //zsviczian
+      if (element.roundness && context.roundRect) { //zsviczian
+        const r = getCornerRadius(Math.min(w, h), element); //zsviczian
+        context.roundRect(0, 0, w, h, r); //zsviczian
+      } else { //zsviczian
+        context.rect(0, 0, w, h); //zsviczian
+      } //zsviczian
+  } //zsviczian
+  context.clip(); //zsviczian
+  const gradient = context.createLinearGradient(0, 0, 0, h); //zsviczian
+  gradient.addColorStop(0, resolvedStart); //zsviczian
+  gradient.addColorStop(1, endColor); //zsviczian
+  context.fillStyle = gradient; //zsviczian
+  context.fillRect(0, 0, w, h); //zsviczian
+  context.restore(); //zsviczian
+}; //zsviczian
+
 const drawElementOnCanvas = (
   element: NonDeletedExcalidrawElement,
   rc: RoughCanvas,
@@ -404,6 +463,9 @@ const drawElementOnCanvas = (
       context.lineJoin = "round";
       context.lineCap = "round";
 
+      if (element.fillStyle === "gradient" && !isTransparent(element.backgroundColor)) { //zsviczian
+        drawGradientFill(element, context, renderConfig); //zsviczian
+      } //zsviczian
       rc.draw(ShapeCache.generateElementShape(element, renderConfig));
       break;
     }
