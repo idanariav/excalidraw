@@ -760,7 +760,7 @@ export const actionChangeStrokeWidth = register<
     );
     const isCustom =
       currentValue !== null && !STROKE_PRESETS.includes(currentValue);
-    const [showInput, setShowInput] = useState(isCustom);
+    const [showInput, setShowInput] = useState(false); //zsviczian - never auto-open; prevents focus steal on selection/tool change
 
     return (
       <fieldset>
@@ -1564,7 +1564,7 @@ export const actionChangeFontSize = register<ExcalidrawTextElement["fontSize"]>(
       // zsviczian - end insert
 
       const { isCompact } = getStylesPanelInfo(app);
-      const [showFontSizeInput, setShowFontSizeInput] = useState(isCustom); //zsviczian
+      const [showFontSizeInput, setShowFontSizeInput] = useState(false); //zsviczian - never auto-open; prevents focus steal on selection/tool change
 
       return (
         <fieldset>
