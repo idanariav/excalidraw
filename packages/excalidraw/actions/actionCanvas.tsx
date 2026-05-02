@@ -48,7 +48,9 @@ import { getShortcutKey } from "../shortcut";
 
 import { register } from "./register";
 
-import type { AppClassProperties, AppState, Offsets } from "../types";
+import type { AppClassProperties, AppState, Offsets, UserCustomColors } from "../types"; //zsviczian
+
+import { computeEffectiveTopPicks } from "../components/ColorPicker/colorPickerUtils"; //zsviczian
 import { getMaxZoom, getZoomMax, getZoomMin, getZoomStep } from "../obsidianUtils";
 import { excludeElementsInFramesFromSelection } from "@excalidraw/element/selection";
 
@@ -74,11 +76,11 @@ export const actionChangeViewBackgroundColor = register<Partial<AppState>>({
     // FIXME move me to src/components/mainMenu/DefaultItems.tsx
     return (
       <ColorPicker
-        topPicks={
-          //zsviczian
-          appState.colorPalette?.topPicks?.canvasBackground ??
-          DEFAULT_CANVAS_BACKGROUND_PICKS
-        }
+        topPicks={computeEffectiveTopPicks( //zsviczian
+          appState.colorPalette?.topPicks?.canvasBackground ?? //zsviczian
+          DEFAULT_CANVAS_BACKGROUND_PICKS, //zsviczian
+          appState.userCustomColors?.topPickOverrides?.canvasBackground, //zsviczian
+        )} //zsviczian
         palette={
           //zsviczian
           appState.colorPalette?.canvasBackground ??
@@ -92,6 +94,8 @@ export const actionChangeViewBackgroundColor = register<Partial<AppState>>({
         elements={elements}
         appState={appState}
         updateData={updateData}
+        userCustomColors={appState.userCustomColors} //zsviczian
+        onUserCustomColorsChange={(updated: UserCustomColors) => updateData({ userCustomColors: updated })} //zsviczian
       />
     );
   },

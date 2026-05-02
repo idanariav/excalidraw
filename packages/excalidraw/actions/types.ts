@@ -64,6 +64,7 @@ export type ActionName =
   | "stats"
   | "changeStrokeColor"
   | "changeBackgroundColor"
+  | "manageUserCustomColors" //zsviczian
   | "changeFillStyle"
   | "changeGradientColor" //zsviczian
   | "changeStrokeWidth"

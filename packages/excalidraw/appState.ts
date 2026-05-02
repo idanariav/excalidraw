@@ -128,6 +128,7 @@ export const getDefaultAppState = (): Omit<
     showHyperlinkPopup: false,
     linkOpacity: 1, //zsviczian
     colorPalette: undefined, //zsviczian
+    userCustomColors: undefined, //zsviczian
     allowPinchZoom: false, //zsviczian
     allowWheelZoom: false, //zsviczian
     disableContextMenu: false, //zsviczian
@@ -289,6 +290,7 @@ const APP_STATE_STORAGE_CONF = (<
   showHyperlinkPopup: { browser: false, export: false, server: false },
   linkOpacity: { browser: false, export: false, server: false }, //zsviczian
   colorPalette: { browser: false, export: false, server: false }, //zsviczian
+  userCustomColors: { browser: true, export: false, server: false }, //zsviczian
   allowPinchZoom: { browser: false, export: false, server: false }, //zsviczian
   allowWheelZoom: { browser: false, export: false, server: false }, //zsviczian
   disableContextMenu: { browser: false, export: false, server: false }, //zsviczian

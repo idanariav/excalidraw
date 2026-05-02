@@ -29,6 +29,7 @@
     "changeStroke": "Change stroke color",
     "background": "Background",
     "changeBackground": "Change background color",
+    "manageUserCustomColors": "Manage custom colors",
     "fill": "Fill",
     "strokeWidth": "Stroke width",
     "strokeStyle": "Stroke style",
@@ -635,7 +636,13 @@
     "colors": "Colors",
     "shades": "Shades",
     "hexCode": "Hex code",
-    "noShades": "No shades available for this color"
+    "noShades": "No shades available for this color",
+    "savedColors": "Saved colors",
+    "saveCurrentColor": "Save color",
+    "removeColor": "Remove",
+    "highlightColor": "Set as top pick",
+    "replaceTopPick": "Replace top pick",
+    "cancelHighlight": "Cancel"
   },
   "overwriteConfirm": {
     "action": {

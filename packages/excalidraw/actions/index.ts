@@ -10,6 +10,7 @@ export { actionDuplicateSelection } from "./actionDuplicateSelection";
 export {
   actionChangeStrokeColor,
   actionChangeBackgroundColor,
+  actionManageUserCustomColors, //zsviczian
   actionChangeStrokeWidth,
   actionChangeFillStyle,
   actionChangeGradientColor, //zsviczian

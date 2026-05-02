@@ -283,6 +283,22 @@ export type ObservedElementsAppState = {
 
 export type BoxSelectionMode = "contain" | "overlap";
 
+export interface UserCustomColorEntry { //zsviczian
+  color: string; //zsviczian
+  shades: [string, string, string, string]; //zsviczian
+} //zsviczian
+
+export interface UserCustomColors { //zsviczian
+  elementStroke: UserCustomColorEntry[]; //zsviczian
+  elementBackground: UserCustomColorEntry[]; //zsviczian
+  canvasBackground: UserCustomColorEntry[]; //zsviczian
+  topPickOverrides: { //zsviczian
+    elementStroke: (string | null)[]; //zsviczian
+    elementBackground: (string | null)[]; //zsviczian
+    canvasBackground: (string | null)[]; //zsviczian
+  }; //zsviczian
+} //zsviczian
+
 export interface AppState {
   contextMenu: {
     items: ContextMenuItems;
@@ -487,6 +503,7 @@ export interface AppState {
       elementBackground: [string, string, string, string, string];
     };
   }; //zsviczian
+  userCustomColors?: UserCustomColors; //zsviczian
   allowWheelZoom?: boolean; //zsviczian
   allowPinchZoom?: boolean; //zsviczian
   disableContextMenu: boolean; //zsviczian

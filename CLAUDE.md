@@ -24,6 +24,20 @@ yarn test:update     # Run all tests (with snapshot updates)
 yarn fix             # Auto-fix formatting and linting issues
 ```
 
+## Known Pre-existing Test Errors
+
+`yarn test:typecheck` reports pre-existing errors in upstream test files that predate this fork's work. These are **not regressions** and should be ignored:
+
+- `*.test.tsx` files: `Property 'h' does not exist on type 'Window & typeof globalThis'`
+- `*.test.tsx` files: `Parameter 'x' implicitly has an 'any' type`
+- `tests/queries/toolQueries.ts`: index-type errors for `'mermaid'` tool type
+
+When running `yarn test:typecheck`, focus only on errors in files you have **modified or created**. Filter the output if needed:
+
+```bash
+yarn test:typecheck 2>&1 | grep "error TS" | grep -v "\.test\.tsx\|test-utils\|textWysiwyg"
+```
+
 ## Fork Convention: `//zsviczian` Markers
 
 Every line added or modified relative to upstream must end with `//zsviczian`. However, **`//zsviczian` inside JSX children context renders as visible text** — JSX treats anything between tags that isn't a `{}` expression as a text node.

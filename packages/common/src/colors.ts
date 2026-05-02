@@ -133,6 +133,7 @@ export type ColorPaletteCustom = { [key: string]: ColorTuple | string };
 export type ColorShadesIndexes = [number, number, number, number, number];
 
 export const MAX_CUSTOM_COLORS_USED_IN_CANVAS = 5;
+export const MAX_USER_CUSTOM_COLORS = 10; //zsviczian
 export const COLORS_PER_ROW = 5;
 
 export const DEFAULT_CHART_COLOR_INDEX = 4;
@@ -353,3 +354,19 @@ export const normalizeInputColor = (color: string): string | null => {
 
   return null;
 };
+
+// -----------------------------------------------------------------------------
+// custom palette shade generation //zsviczian
+// -----------------------------------------------------------------------------
+
+export const generateColorShades = ( //zsviczian
+  color: string, //zsviczian
+): [string, string, string, string] => { //zsviczian
+  const tc = tinycolor(color); //zsviczian
+  return [ //zsviczian
+    tc.clone().lighten(30).toHexString(), //zsviczian
+    tc.clone().lighten(15).toHexString(), //zsviczian
+    tc.clone().darken(15).toHexString(), //zsviczian
+    tc.clone().darken(30).toHexString(), //zsviczian
+  ]; //zsviczian
+}; //zsviczian

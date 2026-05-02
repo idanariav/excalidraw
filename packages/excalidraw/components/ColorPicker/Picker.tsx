@@ -26,8 +26,11 @@ import {
   isCustomColor,
 } from "./colorPickerUtils";
 import { colorPickerKeyNavHandler } from "./keyboardNavHandlers";
+import { SavedPaletteSection } from "./SavedPaletteSection"; //zsviczian
 
 import type { ColorPickerType } from "./colorPickerUtils";
+import type { ColorTuple } from "@excalidraw/common"; //zsviczian
+import type { UserCustomColors } from "../../types"; //zsviczian
 
 interface PickerProps {
   color: string | null;
@@ -41,6 +44,9 @@ interface PickerProps {
   onEyeDropperToggle: (force?: boolean) => void;
   onEscape: (event: React.KeyboardEvent | KeyboardEvent) => void;
   showHotKey?: boolean;
+  userCustomColors?: UserCustomColors; //zsviczian
+  onUserCustomColorsChange?: (updated: UserCustomColors) => void; //zsviczian
+  topPicksForSavedPalette?: ColorTuple; //zsviczian
 }
 
 export const Picker = React.forwardRef(
@@ -57,6 +63,9 @@ export const Picker = React.forwardRef(
       onEyeDropperToggle,
       onEscape,
       showHotKey = true,
+      userCustomColors, //zsviczian
+      onUserCustomColorsChange, //zsviczian
+      topPicksForSavedPalette, //zsviczian
     }: PickerProps,
     ref,
   ) => {
@@ -157,6 +166,7 @@ export const Picker = React.forwardRef(
               updateData,
               activeShade,
               onEscape,
+              savedPaletteColors: userCustomColors?.[type]?.map((e) => e.color) ?? [], //zsviczian
             });
 
             if (handled) {
@@ -183,6 +193,16 @@ export const Picker = React.forwardRef(
               />
             </div>
           )}
+
+          {/* //zsviczian */}
+          <SavedPaletteSection
+            type={type}
+            currentColor={color}
+            userCustomColors={userCustomColors}
+            effectiveTopPicks={topPicksForSavedPalette}
+            onChange={onChange}
+            onUserCustomColorsChange={onUserCustomColorsChange}
+          />
 
           <div>
             <PickerHeading>{t("colorPicker.colors")}</PickerHeading>

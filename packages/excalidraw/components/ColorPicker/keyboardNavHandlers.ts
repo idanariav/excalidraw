@@ -119,6 +119,7 @@ interface ColorPickerKeyNavHandlerProps {
   activeShade: number;
   onEyeDropperToggle: (force?: boolean) => void;
   onEscape: (event: React.KeyboardEvent | KeyboardEvent) => void;
+  savedPaletteColors?: string[]; //zsviczian
 }
 
 /**
@@ -136,6 +137,7 @@ export const colorPickerKeyNavHandler = ({
   activeShade,
   onEyeDropperToggle,
   onEscape,
+  savedPaletteColors = [], //zsviczian
 }: ColorPickerKeyNavHandlerProps): boolean => {
   if (event[KEYS.CTRL_OR_CMD]) {
     return false;
@@ -165,6 +167,7 @@ export const colorPickerKeyNavHandler = ({
       boolean
     > = {
       custom: !!customColors.length,
+      savedPalette: !!savedPaletteColors.length, //zsviczian
       baseColors: true,
       shades: colorObj?.shade != null,
       hex: true,
@@ -194,6 +197,10 @@ export const colorPickerKeyNavHandler = ({
 
     if (nextSection === "custom") {
       onChange(customColors[0]);
+    } else if (nextSection === "savedPalette") { //zsviczian
+      if (savedPaletteColors[0]) { //zsviczian
+        onChange(savedPaletteColors[0]); //zsviczian
+      } //zsviczian
     } else if (nextSection === "baseColors") {
       const baseColorName = (
         Object.entries(palette) as [string, ValueOf<ColorPalette>][]
@@ -284,6 +291,19 @@ export const colorPickerKeyNavHandler = ({
       return true;
     }
   }
+
+  if (activeColorPickerSection === "savedPalette" && savedPaletteColors.length) { //zsviczian
+    const indexOfColor = color != null ? savedPaletteColors.indexOf(color) : 0; //zsviczian
+    const newColorIndex = arrowHandler( //zsviczian
+      event.key, //zsviczian
+      indexOfColor, //zsviczian
+      savedPaletteColors.length, //zsviczian
+    ); //zsviczian
+    if (newColorIndex !== undefined) { //zsviczian
+      onChange(savedPaletteColors[newColorIndex]); //zsviczian
+      return true; //zsviczian
+    } //zsviczian
+  } //zsviczian
 
   return false;
 };

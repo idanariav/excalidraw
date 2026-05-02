@@ -1,4 +1,5 @@
 import { MAX_CUSTOM_COLORS_USED_IN_CANVAS } from "@excalidraw/common";
+import type { ColorTuple } from "@excalidraw/common"; //zsviczian
 
 import type { ExcalidrawElement } from "@excalidraw/element/types";
 
@@ -89,6 +90,7 @@ export const getMostUsedCustomColors = (
 
 export type ActiveColorPickerSectionAtomType =
   | "custom"
+  | "savedPalette" //zsviczian
   | "baseColors"
   | "shades"
   | "hex"
@@ -100,3 +102,9 @@ export type ColorPickerType =
   | "canvasBackground"
   | "elementBackground"
   | "elementStroke";
+
+export const computeEffectiveTopPicks = ( //zsviczian
+  defaults: readonly string[], //zsviczian
+  overrides: (string | null)[] | undefined, //zsviczian
+): ColorTuple => //zsviczian
+  defaults.map((def, i) => overrides?.[i] ?? def) as unknown as ColorTuple; //zsviczian

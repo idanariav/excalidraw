@@ -36,7 +36,7 @@ import "./ColorPicker.scss";
 
 import type { ColorPickerType } from "./colorPickerUtils";
 
-import type { AppState } from "../../types";
+import type { AppState, UserCustomColors } from "../../types"; //zsviczian
 
 interface ColorPickerProps {
   type: ColorPickerType;
@@ -52,6 +52,8 @@ interface ColorPickerProps {
   palette?: ColorPaletteCustom | null;
   topPicks?: ColorTuple;
   updateData: (formData?: any) => void;
+  userCustomColors?: UserCustomColors; //zsviczian
+  onUserCustomColorsChange?: (updated: UserCustomColors) => void; //zsviczian
 }
 
 const ColorPickerPopupContent = ({
@@ -64,6 +66,9 @@ const ColorPickerPopupContent = ({
   updateData,
   getOpenPopup,
   appState,
+  userCustomColors,
+  onUserCustomColorsChange,
+  topPicks,
 }: Pick<
   ColorPickerProps,
   | "type"
@@ -74,6 +79,9 @@ const ColorPickerPopupContent = ({
   | "palette"
   | "updateData"
   | "appState"
+  | "userCustomColors" //zsviczian
+  | "onUserCustomColorsChange" //zsviczian
+  | "topPicks" //zsviczian
 > & {
   getOpenPopup: () => AppState["openPopup"];
 }) => {
@@ -199,6 +207,9 @@ const ColorPickerPopupContent = ({
           updateData={updateData}
           showTitle={isCompactMode}
           showHotKey={!isMobileMode}
+          userCustomColors={userCustomColors} //zsviczian
+          onUserCustomColorsChange={onUserCustomColorsChange} //zsviczian
+          topPicksForSavedPalette={topPicks} //zsviczian
         >
           {colorInputJSX}
         </Picker>
@@ -289,6 +300,8 @@ export const ColorPicker = ({
   topPicks,
   updateData,
   appState,
+  userCustomColors, //zsviczian
+  onUserCustomColorsChange, //zsviczian
 }: ColorPickerProps) => {
   const openRef = useRef(appState.openPopup);
   useEffect(() => {
@@ -355,6 +368,9 @@ export const ColorPicker = ({
               updateData={updateData}
               getOpenPopup={() => openRef.current}
               appState={appState}
+              userCustomColors={userCustomColors} //zsviczian
+              onUserCustomColorsChange={onUserCustomColorsChange} //zsviczian
+              topPicks={topPicks} //zsviczian
             />
           )}
         </Popover.Root>

@@ -175,7 +175,9 @@ import { getShortcutKey } from "../shortcut";
 
 import { register } from "./register";
 
-import type { AppClassProperties, AppState, Primitive } from "../types";
+import type { AppClassProperties, AppState, Primitive, UserCustomColors } from "../types"; //zsviczian
+
+import { computeEffectiveTopPicks } from "../components/ColorPicker/colorPickerUtils"; //zsviczian
 
 const FONT_SIZE_RELATIVE_INCREASE_STEP = 0.1;
 
@@ -338,7 +340,7 @@ const changeFontSize = (
 // -----------------------------------------------------------------------------
 
 export const actionChangeStrokeColor = register<
-  Pick<AppState, "currentItemStrokeColor">
+  Pick<AppState, "currentItemStrokeColor" | "userCustomColors"> //zsviczian
 >({
   name: "changeStrokeColor",
   label: "labels.stroke",
@@ -389,11 +391,11 @@ export const actionChangeStrokeColor = register<
         <h3 aria-hidden="true">{t("labels.stroke")}</h3>
       )}
       <ColorPicker
-        topPicks={
-          //zsviczian
-          appState.colorPalette?.topPicks?.elementStroke ??
-          DEFAULT_ELEMENT_STROKE_PICKS
-        }
+        topPicks={computeEffectiveTopPicks( //zsviczian
+          appState.colorPalette?.topPicks?.elementStroke ?? //zsviczian
+          DEFAULT_ELEMENT_STROKE_PICKS, //zsviczian
+          appState.userCustomColors?.topPickOverrides?.elementStroke, //zsviczian
+        )} //zsviczian
         palette={
           //zsviczian
           appState.colorPalette?.elementStroke ??
@@ -413,13 +415,15 @@ export const actionChangeStrokeColor = register<
         elements={elements}
         appState={appState}
         updateData={updateData}
+        userCustomColors={appState.userCustomColors} //zsviczian
+        onUserCustomColorsChange={(updated: UserCustomColors) => updateData({ userCustomColors: updated })} //zsviczian
       />
     </>
   ),
 });
 
 export const actionChangeBackgroundColor = register<
-  Pick<AppState, "currentItemBackgroundColor" | "viewBackgroundColor">
+  Pick<AppState, "currentItemBackgroundColor" | "viewBackgroundColor" | "userCustomColors"> //zsviczian
 >({
   name: "changeBackgroundColor",
   label: "labels.changeBackground",
@@ -478,11 +482,11 @@ export const actionChangeBackgroundColor = register<
         <h3 aria-hidden="true">{t("labels.background")}</h3>
       )}
       <ColorPicker
-        topPicks={
-          //zsviczian
-          appState.colorPalette?.topPicks?.elementBackground ??
-          DEFAULT_ELEMENT_BACKGROUND_PICKS
-        }
+        topPicks={computeEffectiveTopPicks( //zsviczian
+          appState.colorPalette?.topPicks?.elementBackground ?? //zsviczian
+          DEFAULT_ELEMENT_BACKGROUND_PICKS, //zsviczian
+          appState.userCustomColors?.topPickOverrides?.elementBackground, //zsviczian
+        )} //zsviczian
         palette={
           //zsviczian
           appState.colorPalette?.elementBackground ??
@@ -504,10 +508,23 @@ export const actionChangeBackgroundColor = register<
         elements={elements}
         appState={appState}
         updateData={updateData}
+        userCustomColors={appState.userCustomColors} //zsviczian
+        onUserCustomColorsChange={(updated: UserCustomColors) => updateData({ userCustomColors: updated })} //zsviczian
       />
     </>
   )
 });
+
+export const actionManageUserCustomColors = register<Pick<AppState, "userCustomColors">>({ //zsviczian
+  name: "manageUserCustomColors", //zsviczian
+  label: "labels.manageUserCustomColors", //zsviczian
+  trackEvent: false, //zsviczian
+  perform: (elements, appState, value) => ({ //zsviczian
+    elements, //zsviczian
+    appState: { ...appState, ...value }, //zsviczian
+    captureUpdate: CaptureUpdateAction.EVENTUALLY, //zsviczian
+  }), //zsviczian
+}); //zsviczian
 
 export const actionChangeFillStyle = register<ExcalidrawElement["fillStyle"]>({
   name: "changeFillStyle",
