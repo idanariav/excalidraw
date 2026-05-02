@@ -308,6 +308,8 @@ export const SelectedShapeActions = ({
           {renderAction("sendBackward")}
           {renderAction("bringForward")}
           {renderAction("bringToFront")}
+          {renderAction("setLayer")}
+          {/* //zsviczian */}
         </div>
       </fieldset>
 
@@ -786,6 +788,8 @@ const CombinedExtraActions = ({
                   {renderAction("sendBackward")}
                   {renderAction("bringForward")}
                   {renderAction("bringToFront")}
+                  {renderAction("setLayer")}
+                  {/* //zsviczian */}
                 </div>
               </fieldset>
 

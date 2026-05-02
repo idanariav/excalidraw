@@ -602,3 +602,22 @@ export const moveAllRight = (
     shiftElementsToEnd,
   );
 };
+
+export const moveToIndex = ( //zsviczian
+  allElements: readonly ExcalidrawElement[], //zsviczian
+  appState: AppState, //zsviczian
+  targetIndex: number, //zsviczian
+) => { //zsviczian
+  const indicesToMove = getIndicesToMove(allElements, appState); //zsviczian
+  if (!indicesToMove.length) return allElements; //zsviczian
+  const elementsToMove = indicesToMove.map((i) => allElements[i]); //zsviczian
+  const remaining = allElements.filter((_, i) => !indicesToMove.includes(i)); //zsviczian
+  const insertAt = Math.max(0, Math.min(targetIndex, remaining.length)); //zsviczian
+  const nextElements: ExcalidrawElement[] = [ //zsviczian
+    ...remaining.slice(0, insertAt), //zsviczian
+    ...elementsToMove, //zsviczian
+    ...remaining.slice(insertAt), //zsviczian
+  ]; //zsviczian
+  syncMovedIndices(nextElements, arrayToMap(elementsToMove)); //zsviczian
+  return nextElements; //zsviczian
+}; //zsviczian

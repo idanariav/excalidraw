@@ -251,6 +251,32 @@ body.excalidraw-cursor-resize * {
     .zIndexButton {
       @include outlineButtonIconStyles;
     }
+
+    // zsviczian - layer number input
+    .zIndexLayerInput {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      font-size: 0.75rem;
+      color: var(--icon-fill-color);
+
+      input[type="number"] {
+        width: 40px;
+        padding: 2px 4px;
+        border: 1px solid var(--default-border-color);
+        border-radius: var(--border-radius-md);
+        background: var(--input-bg-color);
+        color: var(--text-primary-color);
+        font-size: 0.75rem;
+        text-align: center;
+        -moz-appearance: textfield;
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+        }
+      }
+    }
   }
 
   // zsviczian - pixel sublabels and custom inputs for font size / stroke width

@@ -22,6 +22,7 @@
     "sendToBack": "Send to back",
     "bringToFront": "Bring to front",
     "sendBackward": "Send backward",
+    "setLayer": "Set layer position",
     "delete": "Delete",
     "copyStyles": "Copy styles",
     "pasteStyles": "Paste styles",

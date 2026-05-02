@@ -5,6 +5,8 @@ import {
   moveOneRight,
   moveAllLeft,
   moveAllRight,
+  moveToIndex, //zsviczian
+  getSelectedElements, //zsviczian
 } from "@excalidraw/element";
 
 import { CaptureUpdateAction } from "@excalidraw/element";
@@ -154,3 +156,47 @@ export const actionBringToFront = register({
     </button>
   ),
 });
+
+export const actionSetLayer = register({ //zsviczian
+  name: "setLayer", //zsviczian
+  label: "labels.setLayer", //zsviczian
+  keywords: ["zindex", "layer", "position"], //zsviczian
+  trackEvent: { category: "element" }, //zsviczian
+  perform: (elements, appState, value) => { //zsviczian
+    if (value == null) return false; //zsviczian
+    return { //zsviczian
+      elements: moveToIndex(elements, appState, (value as number) - 1), //zsviczian
+      appState, //zsviczian
+      captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+    }; //zsviczian
+  }, //zsviczian
+  PanelComponent: ({ updateData, appState, elements }) => { //zsviczian
+    const selectedElements = getSelectedElements(elements, appState); //zsviczian
+    if (!selectedElements.length) return null; //zsviczian
+    const minIndex = Math.min( //zsviczian
+      ...selectedElements.map((el) => elements.indexOf(el)), //zsviczian
+    ); //zsviczian
+    const currentLayer = minIndex + 1; //zsviczian
+    const totalLayers = elements.length; //zsviczian
+    return ( //zsviczian
+      <label //zsviczian
+        className="zIndexLayerInput" //zsviczian
+        title={t("labels.setLayer")} //zsviczian
+      >
+        {/* //zsviczian */}
+        <input //zsviczian
+          type="number" //zsviczian
+          min={1} //zsviczian
+          max={totalLayers} //zsviczian
+          value={currentLayer} //zsviczian
+          onChange={(e) => { //zsviczian
+            const v = parseInt(e.target.value, 10); //zsviczian
+            if (!isNaN(v)) updateData(v); //zsviczian
+          }} //zsviczian
+        />
+        {/* //zsviczian */}
+        <span>/{totalLayers}</span> {/* //zsviczian */}
+      </label> //zsviczian
+    ); //zsviczian
+  }, //zsviczian
+}); //zsviczian

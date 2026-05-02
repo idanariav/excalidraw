@@ -53,6 +53,7 @@ export type ActionName =
   | "bringForward"
   | "sendToBack"
   | "bringToFront"
+  | "setLayer" //zsviczian
   | "copyStyles"
   | "selectAll"
   | "pasteStyles"
