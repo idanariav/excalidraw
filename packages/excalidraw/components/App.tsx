@@ -612,6 +612,8 @@ const YOUTUBE_VIDEO_STATES = new Map<
   ValueOf<typeof YOUTUBE_STATES>
 >();
 
+const MAX_EMBEDDABLE_VIEWPORT_SCALE = 4;
+
 let IS_PLAIN_PASTE = false;
 let IS_PLAIN_PASTE_TIMER = 0;
 let PLAIN_PASTE_TOAST_SHOWN = false;
@@ -1783,6 +1785,18 @@ class App extends React.Component<AppProps, AppState> {
           const [xScale, yScale] = el.scale ?? [1, 1]; //zsviczian
           const scaledTransform = `scale(${scale * xScale}, ${scale * yScale})`;
 
+          // scale video embeds based on zoom (capped) so that smaller embeds
+          // on canvas when zoomed are still of legible quality
+          // (note: for some embed types like gdrive, the quality is poor when
+          // scaling mid playback and works only when you initially start the
+          // playback at the higher zoom level)
+          const shouldScaleEmbeddableViewport = src?.type === "video";
+          const embeddableViewportScale = clamp(
+            shouldScaleEmbeddableViewport ? scale : 1,
+            0.75,
+            MAX_EMBEDDABLE_VIEWPORT_SCALE,
+          );
+
           return (
             <div
               key={el.id}
@@ -1848,49 +1862,59 @@ class App extends React.Component<AppProps, AppState> {
                     padding: `${el.strokeWidth / (4 * el.scale[0])}px`, //zsviczian MDEmbeddable round border cutoff issue
                   }}
                 >
-                  {(isEmbeddableElement(el)
-                    ? this.props.renderEmbeddable?.(el, this.state) //zsviczian
-                    : null) ??
-                    (isWebview ? ( //zsviczian
-                      <webview
-                        ref={(ref) =>
-                          this.cacheEmbeddableRef(el, ref as HTMLIFrameElement)
-                        }
-                        className="excalidraw__embeddable"
-                        src={
-                          embedLink?.type === "generic" ||
-                          embedLink?.type === "video"
-                            ? embedLink.link
-                            : ""
-                        }
-                        title="Excalidraw Embedded Content"
-                        allowFullScreen={true}
-                      />
-                    ) : (
-                      <iframe
-                        ref={(ref) => this.cacheEmbeddableRef(el, ref)}
-                        className="excalidraw__embeddable"
-                        srcDoc={
-                          src?.type === "document"
-                            ? src.srcdoc(this.state.theme)
-                            : undefined
-                        }
-                        src={
-                          src?.type !== "document" ? src?.link ?? "" : undefined
-                        }
-                        // https://stackoverflow.com/q/18470015
-                        // scrolling="no" //zsviczian
-                        referrerPolicy="no-referrer-when-downgrade"
-                        title="Excalidraw Embedded Content"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen={true}
-                        sandbox={`${
-                          src?.sandbox?.allowSameOrigin
-                            ? "allow-same-origin"
-                            : ""
-                        } allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-presentation allow-downloads`}
-                      />
-                    ))}
+                  <div
+                    className="excalidraw__embeddable__content"
+                    style={{
+                      width: `${embeddableViewportScale * 100}%`,
+                      height: `${embeddableViewportScale * 100}%`,
+                      transform: `scale(${1 / embeddableViewportScale})`,
+                    }}
+                  >
+                    {(isEmbeddableElement(el)
+                      ? this.props.renderEmbeddable?.(el, this.state) //zsviczian
+                      : null) ??
+                      (isWebview ? ( //zsviczian
+                        <webview
+                          ref={(ref) =>
+                            this.cacheEmbeddableRef(el, ref as HTMLIFrameElement)
+                          }
+                          className="excalidraw__embeddable"
+                          src={
+                            embedLink?.type === "generic" ||
+                            embedLink?.type === "video"
+                              ? embedLink.link
+                              : ""
+                          }
+                          title="Excalidraw Embedded Content"
+                          allowFullScreen={true}
+                        />
+                      ) : (
+                        <iframe
+                          ref={(ref) => this.cacheEmbeddableRef(el, ref)}
+                          className="excalidraw__embeddable"
+                          srcDoc={
+                            src?.type === "document"
+                              ? src.srcdoc(this.state.theme)
+                              : undefined
+                          }
+                          src={
+                            src?.type !== "document" ? src?.link ?? "" : undefined
+                          }
+                          // https://stackoverflow.com/q/18470015
+                          // scrolling="no" //zsviczian
+                          referrerPolicy="no-referrer-when-downgrade"
+                          title="Excalidraw Embedded Content"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen={true}
+                          sandbox={`${
+                            src?.sandbox?.allowSameOrigin
+                              ? "allow-same-origin"
+                              : ""
+                          } allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-presentation allow-downloads`}
+                        />
+                      )
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -7602,7 +7626,7 @@ class App extends React.Component<AppProps, AppState> {
               y: scenePointerY,
             },
           });
-          this.setState({ suggestedBinding: null, startBoundElement: null });
+          this.setState({ suggestedBinding: null });
           if (!this.state.activeTool.locked) {
             resetCursor(this.interactiveCanvas);
             this.setState((prevState) => ({
@@ -8274,7 +8298,6 @@ class App extends React.Component<AppProps, AppState> {
         appState: {
           newElement: null,
           editingTextElement: null,
-          startBoundElement: null,
           suggestedBinding: null,
           selectedElementIds: makeNextSelectedElementIds(
             Object.keys(this.state.selectedElementIds)
@@ -9649,17 +9672,8 @@ class App extends React.Component<AppProps, AppState> {
       };
     });
 
-    const boundElement = getHoveredElementForBinding(
-      pointFrom<GlobalPoint>(
-        pointerDownState.origin.x,
-        pointerDownState.origin.y,
-      ),
-      this.scene.getNonDeletedElements(),
-      this.scene.getNonDeletedElementsMap(),
-    );
     this.setState({
       newElement: element,
-      startBoundElement: boundElement,
       suggestedBinding: null,
     });
   };
@@ -11533,7 +11547,7 @@ class App extends React.Component<AppProps, AppState> {
               sceneCoords,
             });
           }
-          this.setState({ suggestedBinding: null, startBoundElement: null });
+          this.setState({ suggestedBinding: null });
           if (!activeTool.locked) {
             resetCursor(this.interactiveCanvas);
             this.setState((prevState) => ({
@@ -11554,9 +11568,9 @@ class App extends React.Component<AppProps, AppState> {
               ),
             }));
           } else {
-            this.setState((prevState) => ({
+            this.setState({
               newElement: null,
-            }));
+            });
           }
           // so that the scene gets rendered again to display the newly drawn linear as well
           this.scene.triggerUpdate();

@@ -698,8 +698,7 @@ const LayerUI = ({
 };
 
 const stripIrrelevantAppStateProps = (appState: AppState): UIAppState => {
-  const { startBoundElement, cursorButton, scrollX, scrollY, ...ret } =
-    appState;
+  const { cursorButton, scrollX, scrollY, ...ret } = appState;
   return ret;
 };
 
