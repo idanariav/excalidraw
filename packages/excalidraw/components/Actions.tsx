@@ -275,9 +275,12 @@ export const SelectedShapeActions = ({
           {(appState.activeTool.type === "text" ||
             suppportsHorizontalAlign(targetElements, elementsMap)) &&
             renderAction("changeTextAlign")}
-          {renderAction("changeTextOutlineColor")} {/*//zsviczian*/}
           {renderAction("changeTextOutlineWidth")} {/*//zsviczian*/}
-          {targetElements.some((el) => isTextElement(el) && el.textOutlineWidth > 0) && //zsviczian
+          {(targetElements.some((el) => isTextElement(el) && el.textOutlineWidth > 0) || //zsviczian
+            (appState.activeTool.type === "text" && appState.currentItemTextOutlineWidth > 0)) && //zsviczian
+            renderAction("changeTextOutlineColor")} {/*//zsviczian*/}
+          {(targetElements.some((el) => isTextElement(el) && el.textOutlineWidth > 0) || //zsviczian
+            (appState.activeTool.type === "text" && appState.currentItemTextOutlineWidth > 0)) && //zsviczian
             renderAction("changeTextOutlineOpacity")} {/*//zsviczian*/}
           {renderAction("changeTextPerspectiveX")} {/*//zsviczian*/}
           {renderAction("changeTextPerspectiveY")} {/*//zsviczian*/}
@@ -679,10 +682,13 @@ const CombinedTextProperties = ({
               {(appState.activeTool.type === "text" || //zsviczian
                 targetElements.some(isTextElement)) && ( //zsviczian
                 <>
-                  {renderAction("changeTextOutlineColor")}
                   {renderAction("changeTextOutlineWidth")}
-                  {targetElements.some((el) => isTextElement(el) && el.textOutlineWidth > 0) && //zsviczian
-                    renderAction("changeTextOutlineOpacity")}
+                  {(targetElements.some((el) => isTextElement(el) && el.textOutlineWidth > 0) || //zsviczian
+                    (appState.activeTool.type === "text" && appState.currentItemTextOutlineWidth > 0)) && //zsviczian
+                    renderAction("changeTextOutlineColor")} {/*//zsviczian*/}
+                  {(targetElements.some((el) => isTextElement(el) && el.textOutlineWidth > 0) || //zsviczian
+                    (appState.activeTool.type === "text" && appState.currentItemTextOutlineWidth > 0)) && //zsviczian
+                    renderAction("changeTextOutlineOpacity")} {/*//zsviczian*/}
                   {renderAction("changeTextPerspectiveX")} {/*//zsviczian*/}
                   {renderAction("changeTextPerspectiveY")} {/*//zsviczian*/}
                 </>

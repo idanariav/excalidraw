@@ -656,7 +656,7 @@ export const actionChangeGradientColor = register<Pick<AppState, "currentItemGra
         elements={elements} //zsviczian
         appState={appState} //zsviczian
         updateData={updateData} //zsviczian
-      /> //zsviczian
+      /> {/* //zsviczian */}
     </fieldset>
   ), //zsviczian
 }); //zsviczian
