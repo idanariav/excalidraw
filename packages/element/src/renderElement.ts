@@ -67,7 +67,7 @@ import {
   isImageElement,
 } from "./typeChecks";
 import { getContainingFrame } from "./frame";
-import { getCornerRadius } from "./utils";
+import { getCornerRadius, isPathALoop } from "./utils"; //zsviczian
 
 import { ShapeCache } from "./shape";
 
@@ -430,6 +430,19 @@ const drawGradientFill = ( //zsviczian
       context.closePath(); //zsviczian
       break; //zsviczian
     } //zsviczian
+    case "line": { //zsviczian
+      if (isLinearElement(element)) { //zsviczian
+        const pts = element.points; //zsviczian
+        if (pts.length >= 2) { //zsviczian
+          context.moveTo(pts[0][0], pts[0][1]); //zsviczian
+          for (let i = 1; i < pts.length; i++) { //zsviczian
+            context.lineTo(pts[i][0], pts[i][1]); //zsviczian
+          } //zsviczian
+          context.closePath(); //zsviczian
+        } //zsviczian
+      } //zsviczian
+      break; //zsviczian
+    } //zsviczian
     default: //zsviczian
       if (element.roundness && context.roundRect) { //zsviczian
         const r = getCornerRadius(Math.min(w, h), element); //zsviczian
@@ -473,6 +486,15 @@ const drawElementOnCanvas = (
     case "line": {
       context.lineJoin = "round";
       context.lineCap = "round";
+
+      if ( //zsviczian
+        element.type === "line" && //zsviczian
+        element.fillStyle === "gradient" && //zsviczian
+        !isTransparent(element.backgroundColor) && //zsviczian
+        isPathALoop(element.points) //zsviczian
+      ) { //zsviczian
+        drawGradientFill(element, context, renderConfig); //zsviczian
+      } //zsviczian
 
       ShapeCache.generateElementShape(element, renderConfig).forEach(
         (shape) => {

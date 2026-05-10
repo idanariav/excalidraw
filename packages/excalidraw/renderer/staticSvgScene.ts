@@ -456,6 +456,29 @@ const renderElementToSvg = (
         group.appendChild(node);
       });
 
+      if ( //zsviczian
+        element.type === "line" && //zsviczian
+        isPathALoop(element.points) && //zsviczian
+        element.fillStyle === "gradient" && //zsviczian
+        !isTransparent(element.backgroundColor) //zsviczian
+      ) { //zsviczian
+        const gradientId = addGradientDef(element, svgRoot, renderConfig.theme === THEME.DARK); //zsviczian
+        const ownerDoc = svgRoot.ownerDocument!; //zsviczian
+        const fillNode = ownerDoc.createElementNS(SVG_NS, "polygon"); //zsviczian
+        const pointsStr = element.points.map((p) => `${p[0]},${p[1]}`).join(" "); //zsviczian
+        fillNode.setAttribute("points", pointsStr); //zsviczian
+        fillNode.setAttribute("fill", `url(#${gradientId})`); //zsviczian
+        fillNode.setAttribute("stroke", "none"); //zsviczian
+        fillNode.setAttribute( //zsviczian
+          "transform", //zsviczian
+          `translate(${offsetX || 0} ${offsetY || 0}) rotate(${degree} ${cx} ${cy})`, //zsviczian
+        ); //zsviczian
+        if (opacity !== 1) { //zsviczian
+          fillNode.setAttribute("fill-opacity", `${opacity}`); //zsviczian
+        } //zsviczian
+        group.insertBefore(fillNode, group.firstChild); //zsviczian
+      } //zsviczian
+
       const g = maybeWrapNodesInFrameClipPath(
         element,
         root,
