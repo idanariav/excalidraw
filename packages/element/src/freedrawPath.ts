@@ -52,7 +52,7 @@ export const getFreedrawOutlinePoints = (
         size: element.strokeWidth * 4.25,
         thinning: 0.6,
         smoothing: 0.5,
-        streamline: 0.5,
+        streamline: ([0.85, 0.5, 0.1][element.roughness] ?? 0.5), //zsviczian
         easing: easingsFunctions.easeOutSine,
         last: true,
       };

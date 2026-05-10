@@ -216,9 +216,13 @@ export const SelectedShapeActions = ({
         targetElements.some((element) => hasStrokeWidth(element.type))) &&
         renderAction("changeStrokeWidth")}
 
-      {(appState.activeTool.type === "freedraw" ||
-        targetElements.some((element) => element.type === "freedraw")) &&
-        renderAction("changeStrokeShape")}
+      {(appState.activeTool.type === "freedraw" || //zsviczian
+        targetElements.some((element) => element.type === "freedraw")) && ( //zsviczian
+        <> {/* //zsviczian */}
+          {renderAction("changeStrokeShape")}
+          {renderAction("changeSloppiness")} {/* //zsviczian */}
+        </> {/* //zsviczian */}
+      )}
 
       {(hasStrokeStyle(appState.activeTool.type) ||
         targetElements.some((element) => hasStrokeStyle(element.type))) && (
@@ -459,9 +463,6 @@ const CombinedShapeProperties = ({
           >
             <div className="selected-shape-actions">
               {showFillIcons && renderAction("changeFillStyle")}
-              {(targetElements.some((el) => el.fillStyle === "gradient" && !isTransparent(el.backgroundColor)) || //zsviczian
-                (appState.currentItemFillStyle === "gradient" && !isTransparent(appState.currentItemBackgroundColor))) && //zsviczian
-                renderAction("changeGradientColor")} {/* //zsviczian */}
               {(hasStrokeWidth(appState.activeTool.type) ||
                 targetElements.some((element) =>
                   hasStrokeWidth(element.type),
@@ -481,6 +482,32 @@ const CombinedShapeProperties = ({
                   canChangeRoundness(element.type),
                 )) &&
                 renderAction("changeRoundness")}
+              {/* //zsviczian: arc gap controls for ellipses */}
+              {(appState.activeTool.type === "ellipse" ||
+                targetElements.some((el) => el.type === "ellipse")) && (
+                <>
+                  {renderAction("changeArcGapAngle")}
+                  {renderAction("changeArcGapClosed")}
+                </>
+              )}
+              {/* //zsviczian: rect gap controls for rectangles */}
+              {(appState.activeTool.type === "rectangle" ||
+                targetElements.some((el) => el.type === "rectangle")) && (
+                <>
+                  {renderAction("changeRectGapSide")}
+                  {renderAction("changeRectGapSize")}
+                  {renderAction("changeRectGapDepth")}
+                </>
+              )}
+              {/* //zsviczian: tri gap controls for triangles */}
+              {(appState.activeTool.type === "triangle" ||
+                targetElements.some((el) => el.type === "triangle")) && (
+                <>
+                  {renderAction("changeTriGapVertex")}
+                  {renderAction("changeTriGapSize")}
+                  {renderAction("changeTriGapClosed")}
+                </>
+              )}
               {/* //zsviczian: add frame role toggle  */}
               {showToggleFrameRoleAction && (
                 <fieldset>
@@ -924,6 +951,14 @@ export const CompactShapeActions = ({
         </div>
       )}
 
+      {/* Gradient Color - zsviczian */}
+      {(targetElements.some((el) => el.fillStyle === "gradient" && !isTransparent(el.backgroundColor)) ||
+        (appState.currentItemFillStyle === "gradient" && !isTransparent(appState.currentItemBackgroundColor))) && (
+        <div className="compact-action-item">
+          {renderAction("changeGradientColor")}
+        </div>
+      )}
+
       <CombinedShapeProperties
         appState={appState}
         renderAction={renderAction}
@@ -1061,6 +1096,13 @@ export const MobileShapeActions = ({
         {canChangeBackgroundColor(appState, targetElements) && (
           <div className="compact-action-item">
             {renderAction("changeBackgroundColor")}
+          </div>
+        )}
+        {/* Gradient Color - zsviczian */}
+        {(targetElements.some((el) => el.fillStyle === "gradient" && !isTransparent(el.backgroundColor)) ||
+          (appState.currentItemFillStyle === "gradient" && !isTransparent(appState.currentItemBackgroundColor))) && (
+          <div className="compact-action-item">
+            {renderAction("changeGradientColor")}
           </div>
         )}
         <CombinedShapeProperties
