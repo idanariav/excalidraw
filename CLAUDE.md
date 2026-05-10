@@ -63,3 +63,9 @@ Every line added or modified relative to upstream must end with `//zsviczian`. H
 - Internal packages use path aliases (see `vitest.config.mts`)
 - Build system uses esbuild for packages, Vite for the app
 - TypeScript throughout with strict configuration
+
+## Publishing
+follow this workflow:
+1. npm version prerelease
+2. git push && git push --tags
+3. cd packages/excalidraw && yarn build:umd && npm publish --tag beta
