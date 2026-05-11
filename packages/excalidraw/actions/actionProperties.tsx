@@ -3443,14 +3443,12 @@ export const actionInsertTrianglePreset = register<{ widthRatio: number; heightR
         <ButtonIcon //zsviczian
           icon={TriPresetEquilateralIcon} //zsviczian
           title={t("labels.triPresetEquilateral")} //zsviczian
-          subtitle={t("labels.triPresetEquilateral")} //zsviczian
           onClick={() => updateData({ widthRatio: 1, heightRatio: 0.866 })} //zsviczian
         /> {/* //zsviczian */}
         <ButtonIcon //zsviczian
           icon={TriPresetRightAngleIcon} //zsviczian
           title={t("labels.triPresetRightAngle")} //zsviczian
-          subtitle={t("labels.triPresetRightAngle")} //zsviczian
-          onClick={() => updateData({ widthRatio: 1, heightRatio: 1 })} //zsviczian
+          onClick={() => updateData({ widthRatio: 2, heightRatio: 1 })} //zsviczian
         /> {/* //zsviczian */}
       </div> {/* //zsviczian */}
     </fieldset> //zsviczian

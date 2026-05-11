@@ -2650,28 +2650,29 @@ export const ArcClosedIcon = createIcon(
 ); //zsviczian
 
 // three-quarter arc preset icon: gap=90°, shows 270° remaining (Pac-Man / three-quarter circle) //zsviczian
+// three-quarter arc preset icon: gap=90°, gap at top-right (between 12 and 3 o'clock) //zsviczian
 export const ArcThreeQuarterIcon = createIcon(
   <g strokeWidth="1.5">
     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-    <path d="M 12 12 L 17.66 6.34 A 8 8 0 1 1 6.34 6.34 Z" />
+    <path d="M 12 12 L 20 12 A 8 8 0 1 1 12 4 Z" />
   </g>,
   tablerIconProps,
 ); //zsviczian
 
-// half arc preset icon: gap=180°, shows 180° remaining (semicircle at bottom) //zsviczian
+// half arc preset icon: gap=180°, bottom bowl, gap = top half //zsviczian
 export const ArcHalfIcon = createIcon(
   <g strokeWidth="1.5">
     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-    <path d="M 4 12 A 8 8 0 0 1 20 12 Z" />
+    <path d="M 4 12 A 8 8 0 0 0 20 12 Z" />
   </g>,
   tablerIconProps,
 ); //zsviczian
 
-// quarter arc preset icon: gap=270°, shows 90° remaining (small pie slice at bottom) //zsviczian
+// quarter arc preset icon: gap=270°, bottom-left wedge, gap includes top-right //zsviczian
 export const ArcQuarterIcon = createIcon(
   <g strokeWidth="1.5">
     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-    <path d="M 12 12 L 17.66 17.66 A 8 8 0 0 1 6.34 17.66 Z" />
+    <path d="M 12 12 L 4 12 A 8 8 0 0 0 12 20 Z" />
   </g>,
   tablerIconProps,
 ); //zsviczian
@@ -2792,7 +2793,7 @@ export const TriPresetEquilateralIcon = createIcon( //zsviczian
 export const TriPresetRightAngleIcon = createIcon( //zsviczian
   <g strokeWidth="1.5"> //zsviczian
     <path stroke="none" d="M0 0h24v24H0z" fill="none" /> //zsviczian
-    <path d="M4 4 L4 20 L20 20 Z" /> //zsviczian
+    <path d="M4 3 L4 21 L21 21 Z" /> //zsviczian
   </g>, //zsviczian
   tablerIconProps, //zsviczian
 ); //zsviczian
