@@ -406,6 +406,15 @@ const drawGradientFill = ( //zsviczian
       : isDark //zsviczian
       ? applyDarkModeFilter(startColor) //zsviczian
       : startColor; //zsviczian
+  // For line elements, the points are in element-local coords relative to element.x/y,
+  // which may not be the top-left of the bounding box. Compute actual point bounds so
+  // the gradient spans the full polygon height and fillRect covers all points. //zsviczian
+  let gradY0 = 0; //zsviczian
+  let gradY1 = h; //zsviczian
+  let fillX = 0; //zsviczian
+  let fillY = 0; //zsviczian
+  let fillW = w; //zsviczian
+  let fillH = h; //zsviczian
   context.save(); //zsviczian
   context.beginPath(); //zsviczian
   switch (element.type) { //zsviczian
@@ -434,6 +443,12 @@ const drawGradientFill = ( //zsviczian
       if (isLinearElement(element)) { //zsviczian
         const pts = element.points; //zsviczian
         if (pts.length >= 2) { //zsviczian
+          gradY0 = Math.min(...pts.map((p) => p[1])); //zsviczian
+          gradY1 = Math.max(...pts.map((p) => p[1])); //zsviczian
+          fillX = Math.min(...pts.map((p) => p[0])); //zsviczian
+          fillY = gradY0; //zsviczian
+          fillW = Math.max(...pts.map((p) => p[0])) - fillX; //zsviczian
+          fillH = gradY1 - gradY0; //zsviczian
           context.moveTo(pts[0][0], pts[0][1]); //zsviczian
           for (let i = 1; i < pts.length; i++) { //zsviczian
             context.lineTo(pts[i][0], pts[i][1]); //zsviczian
@@ -452,11 +467,11 @@ const drawGradientFill = ( //zsviczian
       } //zsviczian
   } //zsviczian
   context.clip(); //zsviczian
-  const gradient = context.createLinearGradient(0, 0, 0, h); //zsviczian
+  const gradient = context.createLinearGradient(0, gradY0, 0, gradY1); //zsviczian
   gradient.addColorStop(0, resolvedStart); //zsviczian
   gradient.addColorStop(1, endColor); //zsviczian
   context.fillStyle = gradient; //zsviczian
-  context.fillRect(0, 0, w, h); //zsviczian
+  context.fillRect(fillX, fillY, fillW, fillH); //zsviczian
   context.restore(); //zsviczian
 }; //zsviczian
 
