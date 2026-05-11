@@ -81,7 +81,7 @@ export const Picker = React.forwardRef(
       if (type === "canvasBackground") {
         return [];
       }
-      return getMostUsedCustomColors(elements, type, palette);
+      return getMostUsedCustomColors(elements, type, palette); //zsviczian: type now includes "elementGradient"
     });
 
     const [activeColorPickerSection, setActiveColorPickerSection] = useAtom(
@@ -119,7 +119,7 @@ export const Picker = React.forwardRef(
 
     const [activeShade, setActiveShade] = useState(
       colorObj?.shade ??
-        (type === "elementBackground"
+        (type === "elementBackground" || type === "elementGradient" //zsviczian
           ? DEFAULT_ELEMENT_BACKGROUND_COLOR_INDEX
           : type === "canvasBackground" //zsviczian
           ? 0
@@ -166,7 +166,7 @@ export const Picker = React.forwardRef(
               updateData,
               activeShade,
               onEscape,
-              savedPaletteColors: userCustomColors?.[type]?.map((e) => e.color) ?? [], //zsviczian
+              savedPaletteColors: userCustomColors?.[type === "elementGradient" ? "elementBackground" : type]?.map((e) => e.color) ?? [], //zsviczian
             });
 
             if (handled) {

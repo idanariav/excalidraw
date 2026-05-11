@@ -52,29 +52,35 @@ export const isCustomColor = ({
 
 export const getMostUsedCustomColors = (
   elements: readonly ExcalidrawElement[],
-  type: "elementBackground" | "elementStroke",
+  type: "elementBackground" | "elementStroke" | "elementGradient", //zsviczian
   palette: ColorPaletteCustom,
 ) => {
   const elementColorTypeMap = {
     elementBackground: "backgroundColor",
     elementStroke: "strokeColor",
+    elementGradient: "gradientColor", //zsviczian
   };
+
+  const getColor = (element: ExcalidrawElement): string | undefined => //zsviczian
+    type === "elementGradient" //zsviczian
+      ? element.gradientColor //zsviczian
+      : element[elementColorTypeMap[type] as "backgroundColor" | "strokeColor"]; //zsviczian
 
   const colors = elements.filter((element) => {
     if (element.isDeleted) {
       return false;
     }
 
-    const color =
-      element[elementColorTypeMap[type] as "backgroundColor" | "strokeColor"];
+    const color = getColor(element); //zsviczian
+    if (!color) { return false; } //zsviczian
 
     return isCustomColor({ color, palette });
   });
 
   const colorCountMap = new Map<string, number>();
   colors.forEach((element) => {
-    const color =
-      element[elementColorTypeMap[type] as "backgroundColor" | "strokeColor"];
+    const color = getColor(element); //zsviczian
+    if (!color) { return; } //zsviczian
     if (colorCountMap.has(color)) {
       colorCountMap.set(color, colorCountMap.get(color)! + 1);
     } else {
@@ -101,7 +107,8 @@ export const activeColorPickerSectionAtom =
 export type ColorPickerType =
   | "canvasBackground"
   | "elementBackground"
-  | "elementStroke";
+  | "elementStroke"
+  | "elementGradient"; //zsviczian
 
 export const computeEffectiveTopPicks = ( //zsviczian
   defaults: readonly string[], //zsviczian

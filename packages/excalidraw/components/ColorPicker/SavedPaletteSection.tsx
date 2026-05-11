@@ -60,13 +60,15 @@ const StarIcon = () => ( //zsviczian
 ); //zsviczian
 
 export const SavedPaletteSection = ({ //zsviczian
-  type, //zsviczian
+  type: typeProp, //zsviczian
   currentColor, //zsviczian
   userCustomColors, //zsviczian
   effectiveTopPicks, //zsviczian
   onChange, //zsviczian
   onUserCustomColorsChange, //zsviczian
 }: SavedPaletteSectionProps) => { //zsviczian
+  // "elementGradient" reuses the elementBackground saved palette //zsviczian
+  const type = typeProp === "elementGradient" ? "elementBackground" : typeProp; //zsviczian
   const [highlightingColor, setHighlightingColor] = useState<string | null>(null); //zsviczian
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null); //zsviczian
 

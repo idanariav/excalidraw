@@ -433,6 +433,7 @@ export interface AppState {
     | "canvasBackground"
     | "elementBackground"
     | "elementStroke"
+    | "elementGradient" //zsviczian
     | "fontFamily"
     | "compactTextProperties"
     | "compactStrokeStyles"

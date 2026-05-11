@@ -655,7 +655,7 @@ export const actionChangeGradientColor = register<Pick<AppState, "currentItemGra
           appState.colorPalette?.elementBackground ?? //zsviczian
           DEFAULT_ELEMENT_BACKGROUND_COLOR_PALETTE //zsviczian
         } //zsviczian
-        type="elementBackground" //zsviczian
+        type="elementGradient" //zsviczian
         label={t("labels.gradientColor")} //zsviczian
         color={getFormValue( //zsviczian
           elements, //zsviczian
@@ -3285,19 +3285,19 @@ export const actionInsertRectanglePreset = register<{ widthRatio: number; height
       <legend>{t("labels.rectPreset")}</legend> {/* //zsviczian */}
       <div className="buttonList"> {/* //zsviczian */}
         <ButtonIcon //zsviczian
-          icon={<RectPresetSquareIcon />} //zsviczian
+          icon={RectPresetSquareIcon} //zsviczian
           title={t("labels.rectPresetSquare")} //zsviczian
           subtitle="1:1" //zsviczian
           onClick={() => updateData({ widthRatio: 1, heightRatio: 1 })} //zsviczian
         /> {/* //zsviczian */}
         <ButtonIcon //zsviczian
-          icon={<RectPreset4x5Icon />} //zsviczian
+          icon={RectPreset4x5Icon} //zsviczian
           title={t("labels.rectPreset4x5")} //zsviczian
           subtitle="4:5" //zsviczian
           onClick={() => updateData({ widthRatio: 4, heightRatio: 5 })} //zsviczian
         /> {/* //zsviczian */}
         <ButtonIcon //zsviczian
-          icon={<RectPreset16x9Icon />} //zsviczian
+          icon={RectPreset16x9Icon} //zsviczian
           title={t("labels.rectPreset16x9")} //zsviczian
           subtitle="16:9" //zsviczian
           onClick={() => updateData({ widthRatio: 16, heightRatio: 9 })} //zsviczian
@@ -3367,7 +3367,7 @@ export const actionInsertEllipsePreset = register<{ widthRatio: number; heightRa
       <legend>{t("labels.ellipsePreset")}</legend> {/* //zsviczian */}
       <div className="buttonList"> {/* //zsviczian */}
         <ButtonIcon //zsviczian
-          icon={<EllipsePresetCircleIcon />} //zsviczian
+          icon={EllipsePresetCircleIcon} //zsviczian
           title={t("labels.ellipsePresetCircle")} //zsviczian
           subtitle="1:1" //zsviczian
           onClick={() => updateData({ widthRatio: 1, heightRatio: 1 })} //zsviczian
@@ -3441,13 +3441,13 @@ export const actionInsertTrianglePreset = register<{ widthRatio: number; heightR
       <legend>{t("labels.trianglePreset")}</legend> {/* //zsviczian */}
       <div className="buttonList"> {/* //zsviczian */}
         <ButtonIcon //zsviczian
-          icon={<TriPresetEquilateralIcon />} //zsviczian
+          icon={TriPresetEquilateralIcon} //zsviczian
           title={t("labels.triPresetEquilateral")} //zsviczian
           subtitle={t("labels.triPresetEquilateral")} //zsviczian
           onClick={() => updateData({ widthRatio: 1, heightRatio: 0.866 })} //zsviczian
         /> {/* //zsviczian */}
         <ButtonIcon //zsviczian
-          icon={<TriPresetRightAngleIcon />} //zsviczian
+          icon={TriPresetRightAngleIcon} //zsviczian
           title={t("labels.triPresetRightAngle")} //zsviczian
           subtitle={t("labels.triPresetRightAngle")} //zsviczian
           onClick={() => updateData({ widthRatio: 1, heightRatio: 1 })} //zsviczian
