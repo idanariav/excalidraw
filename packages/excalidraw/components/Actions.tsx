@@ -221,7 +221,7 @@ export const SelectedShapeActions = ({
         <> {/* //zsviczian */}
           {renderAction("changeStrokeShape")}
           {renderAction("changeSloppiness")} {/* //zsviczian */}
-        </> {/* //zsviczian */}
+        </>
       )}
 
       {(hasStrokeStyle(appState.activeTool.type) ||
