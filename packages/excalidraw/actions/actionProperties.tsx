@@ -17,6 +17,7 @@ import {
   KEYS,
   randomInteger,
   arrayToMap,
+  updateActiveTool, //zsviczian
   getFontFamilyString,
   getLineHeight,
   isTransparent,
@@ -36,6 +37,12 @@ import {
 import { LinearElementEditor } from "@excalidraw/element";
 
 import { newElementWith } from "@excalidraw/element";
+import { //zsviczian
+  newRectangleElement, //zsviczian
+  newEllipseElement, //zsviczian
+  newTriangleElement, //zsviczian
+  syncMovedIndices, //zsviczian
+} from "@excalidraw/element"; //zsviczian
 import { getArrowheadForPicker } from "@excalidraw/element";
 
 import {
@@ -154,6 +161,12 @@ import {
   TriGapTopIcon, //zsviczian
   TriGapBottomLeftIcon, //zsviczian
   TriGapBottomRightIcon, //zsviczian
+  RectPresetSquareIcon, //zsviczian
+  RectPreset4x5Icon, //zsviczian
+  RectPreset16x9Icon, //zsviczian
+  EllipsePresetCircleIcon, //zsviczian
+  TriPresetEquilateralIcon, //zsviczian
+  TriPresetRightAngleIcon, //zsviczian
 } from "../components/icons";
 
 import { Fonts } from "../fonts";
@@ -3206,4 +3219,240 @@ export const actionChangeTextPerspectiveY = register<number>({ //zsviczian
       /> //zsviczian
     ); //zsviczian
   }, //zsviczian
+}); //zsviczian
+
+export const actionInsertRectanglePreset = register<{ widthRatio: number; heightRatio: number }>({ //zsviczian
+  name: "insertRectanglePreset", //zsviczian
+  label: "labels.rectPreset", //zsviczian
+  trackEvent: false, //zsviczian
+  perform: (elements, appState, value) => { //zsviczian
+    if (!value) { return false; } //zsviczian
+    const { widthRatio, heightRatio } = value; //zsviczian
+    const targetEls = getTargetElements(getNonDeletedElements(elements), appState) //zsviczian
+      .filter((el) => el.type === "rectangle"); //zsviczian
+    if (targetEls.length > 0) { //zsviczian
+      return { //zsviczian
+        elements: changeProperty(elements, appState, (el) => { //zsviczian
+          if (el.type !== "rectangle") { return el; } //zsviczian
+          const newH = el.width * (heightRatio / widthRatio); //zsviczian
+          const newY = el.y + el.height / 2 - newH / 2; //zsviczian
+          return newElementWith(el, { height: newH, y: newY }); //zsviczian
+        }), //zsviczian
+        appState, //zsviczian
+        captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+      }; //zsviczian
+    } //zsviczian
+    const BASE = 160 / appState.zoom.value; //zsviczian
+    const w = BASE; //zsviczian
+    const h = BASE * (heightRatio / widthRatio); //zsviczian
+    const cx = appState.width / 2 / appState.zoom.value - appState.scrollX; //zsviczian
+    const cy = appState.height / 2 / appState.zoom.value - appState.scrollY; //zsviczian
+    const roundness = appState.currentItemRoundness === "round" //zsviczian
+      ? { type: ROUNDNESS.ADAPTIVE_RADIUS } //zsviczian
+      : null; //zsviczian
+    const element = newRectangleElement({ //zsviczian
+      type: "rectangle", //zsviczian
+      x: cx - w / 2, //zsviczian
+      y: cy - h / 2, //zsviczian
+      width: w, //zsviczian
+      height: h, //zsviczian
+      strokeColor: appState.currentItemStrokeColor, //zsviczian
+      backgroundColor: appState.currentItemBackgroundColor, //zsviczian
+      fillStyle: appState.currentItemFillStyle, //zsviczian
+      strokeWidth: appState.currentItemStrokeWidth, //zsviczian
+      strokeStyle: appState.currentItemStrokeStyle, //zsviczian
+      roughness: appState.currentItemRoughness, //zsviczian
+      roundness, //zsviczian
+      opacity: appState.currentItemOpacity, //zsviczian
+      rectGapSide: appState.currentItemRectGapSide, //zsviczian
+      rectGapSize: appState.currentItemRectGapSize, //zsviczian
+      rectGapDepth: appState.currentItemRectGapDepth, //zsviczian
+      locked: false, //zsviczian
+    }); //zsviczian
+    const nextElements = syncMovedIndices([...elements, element], arrayToMap([element])); //zsviczian
+    return { //zsviczian
+      elements: nextElements, //zsviczian
+      appState: { //zsviczian
+        ...appState, //zsviczian
+        selectedElementIds: { [element.id]: true }, //zsviczian
+        activeTool: updateActiveTool(appState, { type: "selection" }), //zsviczian
+      }, //zsviczian
+      captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+    }; //zsviczian
+  }, //zsviczian
+  PanelComponent: ({ updateData }) => ( //zsviczian
+    <fieldset> {/* //zsviczian */}
+      <legend>{t("labels.rectPreset")}</legend> {/* //zsviczian */}
+      <div className="buttonList"> {/* //zsviczian */}
+        <ButtonIcon //zsviczian
+          icon={<RectPresetSquareIcon />} //zsviczian
+          title={t("labels.rectPresetSquare")} //zsviczian
+          subtitle="1:1" //zsviczian
+          onClick={() => updateData({ widthRatio: 1, heightRatio: 1 })} //zsviczian
+        /> {/* //zsviczian */}
+        <ButtonIcon //zsviczian
+          icon={<RectPreset4x5Icon />} //zsviczian
+          title={t("labels.rectPreset4x5")} //zsviczian
+          subtitle="4:5" //zsviczian
+          onClick={() => updateData({ widthRatio: 4, heightRatio: 5 })} //zsviczian
+        /> {/* //zsviczian */}
+        <ButtonIcon //zsviczian
+          icon={<RectPreset16x9Icon />} //zsviczian
+          title={t("labels.rectPreset16x9")} //zsviczian
+          subtitle="16:9" //zsviczian
+          onClick={() => updateData({ widthRatio: 16, heightRatio: 9 })} //zsviczian
+        /> {/* //zsviczian */}
+      </div> {/* //zsviczian */}
+    </fieldset> //zsviczian
+  ), //zsviczian
+}); //zsviczian
+
+export const actionInsertEllipsePreset = register<{ widthRatio: number; heightRatio: number }>({ //zsviczian
+  name: "insertEllipsePreset", //zsviczian
+  label: "labels.ellipsePreset", //zsviczian
+  trackEvent: false, //zsviczian
+  perform: (elements, appState, value) => { //zsviczian
+    if (!value) { return false; } //zsviczian
+    const { widthRatio, heightRatio } = value; //zsviczian
+    const targetEls = getTargetElements(getNonDeletedElements(elements), appState) //zsviczian
+      .filter((el) => el.type === "ellipse"); //zsviczian
+    if (targetEls.length > 0) { //zsviczian
+      return { //zsviczian
+        elements: changeProperty(elements, appState, (el) => { //zsviczian
+          if (el.type !== "ellipse") { return el; } //zsviczian
+          const newH = el.width * (heightRatio / widthRatio); //zsviczian
+          const newY = el.y + el.height / 2 - newH / 2; //zsviczian
+          return newElementWith(el, { height: newH, y: newY }); //zsviczian
+        }), //zsviczian
+        appState, //zsviczian
+        captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+      }; //zsviczian
+    } //zsviczian
+    const BASE = 160 / appState.zoom.value; //zsviczian
+    const w = BASE; //zsviczian
+    const h = BASE * (heightRatio / widthRatio); //zsviczian
+    const cx = appState.width / 2 / appState.zoom.value - appState.scrollX; //zsviczian
+    const cy = appState.height / 2 / appState.zoom.value - appState.scrollY; //zsviczian
+    const element = newEllipseElement({ //zsviczian
+      type: "ellipse", //zsviczian
+      x: cx - w / 2, //zsviczian
+      y: cy - h / 2, //zsviczian
+      width: w, //zsviczian
+      height: h, //zsviczian
+      strokeColor: appState.currentItemStrokeColor, //zsviczian
+      backgroundColor: appState.currentItemBackgroundColor, //zsviczian
+      fillStyle: appState.currentItemFillStyle, //zsviczian
+      strokeWidth: appState.currentItemStrokeWidth, //zsviczian
+      strokeStyle: appState.currentItemStrokeStyle, //zsviczian
+      roughness: appState.currentItemRoughness, //zsviczian
+      roundness: { type: ROUNDNESS.ADAPTIVE_RADIUS }, //zsviczian
+      opacity: appState.currentItemOpacity, //zsviczian
+      arcGapAngle: appState.currentItemArcGapAngle, //zsviczian
+      arcGapClosed: appState.currentItemArcGapClosed, //zsviczian
+      locked: false, //zsviczian
+    }); //zsviczian
+    const nextElements = syncMovedIndices([...elements, element], arrayToMap([element])); //zsviczian
+    return { //zsviczian
+      elements: nextElements, //zsviczian
+      appState: { //zsviczian
+        ...appState, //zsviczian
+        selectedElementIds: { [element.id]: true }, //zsviczian
+        activeTool: updateActiveTool(appState, { type: "selection" }), //zsviczian
+      }, //zsviczian
+      captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+    }; //zsviczian
+  }, //zsviczian
+  PanelComponent: ({ updateData }) => ( //zsviczian
+    <fieldset> {/* //zsviczian */}
+      <legend>{t("labels.ellipsePreset")}</legend> {/* //zsviczian */}
+      <div className="buttonList"> {/* //zsviczian */}
+        <ButtonIcon //zsviczian
+          icon={<EllipsePresetCircleIcon />} //zsviczian
+          title={t("labels.ellipsePresetCircle")} //zsviczian
+          subtitle="1:1" //zsviczian
+          onClick={() => updateData({ widthRatio: 1, heightRatio: 1 })} //zsviczian
+        /> {/* //zsviczian */}
+      </div> {/* //zsviczian */}
+    </fieldset> //zsviczian
+  ), //zsviczian
+}); //zsviczian
+
+export const actionInsertTrianglePreset = register<{ widthRatio: number; heightRatio: number }>({ //zsviczian
+  name: "insertTrianglePreset", //zsviczian
+  label: "labels.trianglePreset", //zsviczian
+  trackEvent: false, //zsviczian
+  perform: (elements, appState, value) => { //zsviczian
+    if (!value) { return false; } //zsviczian
+    const { widthRatio, heightRatio } = value; //zsviczian
+    const targetEls = getTargetElements(getNonDeletedElements(elements), appState) //zsviczian
+      .filter((el) => el.type === "triangle"); //zsviczian
+    if (targetEls.length > 0) { //zsviczian
+      return { //zsviczian
+        elements: changeProperty(elements, appState, (el) => { //zsviczian
+          if (el.type !== "triangle") { return el; } //zsviczian
+          const newH = el.width * (heightRatio / widthRatio); //zsviczian
+          const newY = el.y + el.height / 2 - newH / 2; //zsviczian
+          return newElementWith(el, { height: newH, y: newY }); //zsviczian
+        }), //zsviczian
+        appState, //zsviczian
+        captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+      }; //zsviczian
+    } //zsviczian
+    const BASE = 160 / appState.zoom.value; //zsviczian
+    const w = BASE; //zsviczian
+    const h = BASE * (heightRatio / widthRatio); //zsviczian
+    const cx = appState.width / 2 / appState.zoom.value - appState.scrollX; //zsviczian
+    const cy = appState.height / 2 / appState.zoom.value - appState.scrollY; //zsviczian
+    const roundness = appState.currentItemRoundness === "round" //zsviczian
+      ? { type: ROUNDNESS.ADAPTIVE_RADIUS } //zsviczian
+      : null; //zsviczian
+    const element = newTriangleElement({ //zsviczian
+      type: "triangle", //zsviczian
+      x: cx - w / 2, //zsviczian
+      y: cy - h / 2, //zsviczian
+      width: w, //zsviczian
+      height: h, //zsviczian
+      strokeColor: appState.currentItemStrokeColor, //zsviczian
+      backgroundColor: appState.currentItemBackgroundColor, //zsviczian
+      fillStyle: appState.currentItemFillStyle, //zsviczian
+      strokeWidth: appState.currentItemStrokeWidth, //zsviczian
+      strokeStyle: appState.currentItemStrokeStyle, //zsviczian
+      roughness: appState.currentItemRoughness, //zsviczian
+      roundness, //zsviczian
+      opacity: appState.currentItemOpacity, //zsviczian
+      triGapVertex: appState.currentItemTriGapVertex, //zsviczian
+      triGapSize: appState.currentItemTriGapSize, //zsviczian
+      triGapClosed: appState.currentItemTriGapClosed, //zsviczian
+      locked: false, //zsviczian
+    }); //zsviczian
+    const nextElements = syncMovedIndices([...elements, element], arrayToMap([element])); //zsviczian
+    return { //zsviczian
+      elements: nextElements, //zsviczian
+      appState: { //zsviczian
+        ...appState, //zsviczian
+        selectedElementIds: { [element.id]: true }, //zsviczian
+        activeTool: updateActiveTool(appState, { type: "selection" }), //zsviczian
+      }, //zsviczian
+      captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+    }; //zsviczian
+  }, //zsviczian
+  PanelComponent: ({ updateData }) => ( //zsviczian
+    <fieldset> {/* //zsviczian */}
+      <legend>{t("labels.trianglePreset")}</legend> {/* //zsviczian */}
+      <div className="buttonList"> {/* //zsviczian */}
+        <ButtonIcon //zsviczian
+          icon={<TriPresetEquilateralIcon />} //zsviczian
+          title={t("labels.triPresetEquilateral")} //zsviczian
+          subtitle={t("labels.triPresetEquilateral")} //zsviczian
+          onClick={() => updateData({ widthRatio: 1, heightRatio: 0.866 })} //zsviczian
+        /> {/* //zsviczian */}
+        <ButtonIcon //zsviczian
+          icon={<TriPresetRightAngleIcon />} //zsviczian
+          title={t("labels.triPresetRightAngle")} //zsviczian
+          subtitle={t("labels.triPresetRightAngle")} //zsviczian
+          onClick={() => updateData({ widthRatio: 1, heightRatio: 1 })} //zsviczian
+        /> {/* //zsviczian */}
+      </div> {/* //zsviczian */}
+    </fieldset> //zsviczian
+  ), //zsviczian
 }); //zsviczian

@@ -241,6 +241,7 @@ export const SelectedShapeActions = ({
       {(appState.activeTool.type === "ellipse" ||
         targetElements.some((el) => el.type === "ellipse")) && (
         <>
+          {renderAction("insertEllipsePreset")} {/* //zsviczian */}
           {renderAction("changeArcGapAngle")}
           {renderAction("changeArcGapClosed")}
         </>
@@ -250,6 +251,7 @@ export const SelectedShapeActions = ({
       {(appState.activeTool.type === "rectangle" ||
         targetElements.some((el) => el.type === "rectangle")) && (
         <>
+          {renderAction("insertRectanglePreset")} {/* //zsviczian */}
           {renderAction("changeRectGapSide")}
           {renderAction("changeRectGapSize")}
           {renderAction("changeRectGapDepth")}
@@ -260,6 +262,7 @@ export const SelectedShapeActions = ({
       {(appState.activeTool.type === "triangle" ||
         targetElements.some((el) => el.type === "triangle")) && (
         <>
+          {renderAction("insertTrianglePreset")} {/* //zsviczian */}
           {renderAction("changeTriGapVertex")}
           {renderAction("changeTriGapSize")}
           {renderAction("changeTriGapClosed")}

@@ -164,6 +164,9 @@ export type ActionName =
   | "wrapSelectionInFrame"
   | "toggleLassoTool"
   | "toggleShapeSwitch"
+  | "insertRectanglePreset" //zsviczian
+  | "insertEllipsePreset" //zsviczian
+  | "insertTrianglePreset" //zsviczian
   | "togglePolygon";
 
 export type PanelComponentProps = {

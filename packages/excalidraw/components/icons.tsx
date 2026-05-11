@@ -2748,3 +2748,51 @@ export const TriGapBottomRightIcon = createIcon( //zsviczian
   </g>, //zsviczian
   tablerIconProps, //zsviczian
 ); //zsviczian
+
+export const RectPresetSquareIcon = createIcon( //zsviczian
+  <g strokeWidth="1.5"> //zsviczian
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" /> //zsviczian
+    <rect x="4" y="4" width="16" height="16" /> //zsviczian
+  </g>, //zsviczian
+  tablerIconProps, //zsviczian
+); //zsviczian
+
+export const RectPreset4x5Icon = createIcon( //zsviczian
+  <g strokeWidth="1.5"> //zsviczian
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" /> //zsviczian
+    <rect x="5" y="2" width="14" height="20" /> //zsviczian
+  </g>, //zsviczian
+  tablerIconProps, //zsviczian
+); //zsviczian
+
+export const RectPreset16x9Icon = createIcon( //zsviczian
+  <g strokeWidth="1.5"> //zsviczian
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" /> //zsviczian
+    <rect x="2" y="6" width="20" height="12" /> //zsviczian
+  </g>, //zsviczian
+  tablerIconProps, //zsviczian
+); //zsviczian
+
+export const EllipsePresetCircleIcon = createIcon( //zsviczian
+  <g strokeWidth="1.5"> //zsviczian
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" /> //zsviczian
+    <circle cx="12" cy="12" r="8" /> //zsviczian
+  </g>, //zsviczian
+  tablerIconProps, //zsviczian
+); //zsviczian
+
+export const TriPresetEquilateralIcon = createIcon( //zsviczian
+  <g strokeWidth="1.5"> //zsviczian
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" /> //zsviczian
+    <path d="M12 4 L21 19 L3 19 Z" /> //zsviczian
+  </g>, //zsviczian
+  tablerIconProps, //zsviczian
+); //zsviczian
+
+export const TriPresetRightAngleIcon = createIcon( //zsviczian
+  <g strokeWidth="1.5"> //zsviczian
+    <path stroke="none" d="M0 0h24v24H0z" fill="none" /> //zsviczian
+    <path d="M4 4 L4 20 L20 20 Z" /> //zsviczian
+  </g>, //zsviczian
+  tablerIconProps, //zsviczian
+); //zsviczian

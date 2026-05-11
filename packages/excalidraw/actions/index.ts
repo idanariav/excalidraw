@@ -30,6 +30,9 @@ export {
   actionChangeTriGapVertex, //zsviczian
   actionChangeTriGapSize, //zsviczian
   actionChangeTriGapClosed, //zsviczian
+  actionInsertRectanglePreset, //zsviczian
+  actionInsertEllipsePreset, //zsviczian
+  actionInsertTrianglePreset, //zsviczian
   actionChangeTextOutlineColor, //zsviczian
   actionChangeTextOutlineWidth, //zsviczian
   actionChangeTextOutlineOpacity, //zsviczian
