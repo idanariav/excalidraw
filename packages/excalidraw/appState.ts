@@ -140,6 +140,7 @@ export const getDefaultAppState = (): Omit<
     resetCustomPen: null, //zsviczian
     gridColor: { Bold: "#cccccc", Regular: "#e5e5e5" }, //zsviczian
     gridDirection: { horizontal: true, vertical: true }, //zsviczian
+    gridType: "square" as const, //zsviczian
     highlightSearchResult: false, //zsviczian
     dynamicStyle: {}, //zsviczian
     frameColor: {
@@ -304,6 +305,7 @@ const APP_STATE_STORAGE_CONF = (<
   resetCustomPen: { browser: false, export: false, server: false }, //zsviczian
   gridColor: { browser: false, export: false, server: false }, //zsviczian
   gridDirection: { browser: false, export: false, server: false }, //zsviczian
+  gridType: { browser: true, export: true, server: true }, //zsviczian
   highlightSearchResult: { browser: false, export: false, server: false }, //zsviczian
   dynamicStyle: { browser: false, export: false, server: false }, //zsviczian
   frameColor: { browser: false, export: false, server: false }, //zsviczian

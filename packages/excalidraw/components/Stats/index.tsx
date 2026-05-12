@@ -224,6 +224,22 @@ export const StatsInner = memo(
               {gridModeEnabled && (
                 <>
                   <StatsRow heading>Canvas</StatsRow>
+                  {/* //zsviczian */}
+                  <StatsRow> {/* //zsviczian */}
+                    <label style={{ display: "flex", gap: 8, alignItems: "center", fontSize: "0.85em" }}> {/* //zsviczian */}
+                      {"Grid type"} {/* //zsviczian */}
+                      <select //zsviczian
+                        value={appState.gridType} //zsviczian
+                        onChange={(e) => setAppState({ gridType: e.target.value as AppState["gridType"] })} //zsviczian
+                        style={{ flexGrow: 1 }} //zsviczian
+                      >
+                        <option value="square">Square</option>
+                        <option value="isometric">Isometric</option>
+                        <option value="triangle">Triangle</option>
+                        <option value="perspective">Perspective</option>
+                      </select>
+                    </label>
+                  </StatsRow> {/* //zsviczian */}
                   <StatsRow>
                     <CanvasGridSize //zsviczian
                       property="gridSize"

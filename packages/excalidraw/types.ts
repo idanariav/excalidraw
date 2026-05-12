@@ -210,6 +210,7 @@ export type StaticCanvasAppState = Readonly<
     linkOpacity: AppState["linkOpacity"]; //zsviczian
     gridColor: AppState["gridColor"]; //zsviczian
     gridDirection: AppState["gridDirection"]; //zsviczian
+    gridType: AppState["gridType"]; //zsviczian
     frameColor: AppState["frameColor"]; //zsviczian
     currentHoveredFontFamily: AppState["currentHoveredFontFamily"];
     hoveredElementIds: AppState["hoveredElementIds"];
@@ -516,6 +517,7 @@ export interface AppState {
   resetCustomPen?: any; //zsviczian
   gridColor: { Bold: string; Regular: string }; //zsviczian
   gridDirection: { horizontal: boolean; vertical: boolean }; //zsviczian
+  gridType: "square" | "isometric" | "triangle" | "perspective"; //zsviczian
   highlightSearchResult: boolean; //zsviczian
   dynamicStyle: { [x: string]: string }; //zsviczian
   frameColor: { stroke: string; fill: string; nameColor: string }; //zsviczian

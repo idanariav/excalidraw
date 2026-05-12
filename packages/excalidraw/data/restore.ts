@@ -1082,6 +1082,11 @@ export const restoreAppState = (
     gridStep: getNormalizedGridStep(
       isFiniteNumber(appState.gridStep) ? appState.gridStep : DEFAULT_GRID_STEP,
     ),
+    gridType: (["square", "isometric", "triangle", "perspective"] as const).includes( //zsviczian
+      (appState as any).gridType, //zsviczian
+    ) //zsviczian
+      ? (appState as any).gridType //zsviczian
+      : "square", //zsviczian
     editingFrame: null,
   };
 };
