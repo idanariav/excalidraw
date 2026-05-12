@@ -1714,7 +1714,7 @@
     mlly "^1.8.0"
 
 "@idan_ariav/excalidraw@file:/Users/idanariav/GitProjects/excalidraw/packages/excalidraw":
-  version "0.18.0-91"
+  version "0.18.0-92"
   resolved "file:packages/excalidraw"
   dependencies:
     "@braintree/sanitize-url" "6.0.2"
