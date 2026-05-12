@@ -893,6 +893,62 @@ export const actionChangeSloppiness = register<ExcalidrawElement["roughness"]>({
   ),
 });
 
+export const actionChangeFreeDrawSmoothness = register< //zsviczian
+  ExcalidrawElement["roughness"] //zsviczian
+>({ //zsviczian
+  name: "changeFreeDrawSmoothness", //zsviczian
+  label: "labels.smoothness", //zsviczian
+  trackEvent: false, //zsviczian
+  perform: (elements, appState, value) => { //zsviczian
+    return { //zsviczian
+      elements: changeProperty(elements, appState, (el) => //zsviczian
+        newElementWith(el, { //zsviczian
+          seed: randomInteger(), //zsviczian
+          roughness: value, //zsviczian
+        }), //zsviczian
+      ), //zsviczian
+      appState: { ...appState, currentItemRoughness: value }, //zsviczian
+      captureUpdate: CaptureUpdateAction.IMMEDIATELY, //zsviczian
+    }; //zsviczian
+  }, //zsviczian
+  PanelComponent: ({ elements, appState, updateData, app, data }) => ( //zsviczian
+    <fieldset> {/* //zsviczian */}
+      <legend>{t("labels.smoothness")}</legend> {/* //zsviczian */}
+      <div className="buttonList"> {/* //zsviczian */}
+        <RadioSelection //zsviczian
+          group="freedrawSmoothness" //zsviczian
+          options={[ //zsviczian
+            { //zsviczian
+              value: 0, //zsviczian
+              text: t("labels.smooth_none"), //zsviczian
+              icon: SloppinessCartoonistIcon, //zsviczian
+            }, //zsviczian
+            { //zsviczian
+              value: 1, //zsviczian
+              text: t("labels.smooth_medium"), //zsviczian
+              icon: SloppinessArtistIcon, //zsviczian
+            }, //zsviczian
+            { //zsviczian
+              value: 2, //zsviczian
+              text: t("labels.smooth_high"), //zsviczian
+              icon: SloppinessArchitectIcon, //zsviczian
+            }, //zsviczian
+          ]} //zsviczian
+          value={getFormValue( //zsviczian
+            elements, //zsviczian
+            app, //zsviczian
+            (element) => element.roughness, //zsviczian
+            (element) => element.hasOwnProperty("roughness"), //zsviczian
+            (hasSelection) => //zsviczian
+              hasSelection ? null : appState.currentItemRoughness, //zsviczian
+          )} //zsviczian
+          onChange={(value) => updateData(value)} //zsviczian
+        /> {/* //zsviczian */}
+      </div> {/* //zsviczian */}
+    </fieldset> //zsviczian
+  ), //zsviczian
+}); //zsviczian
+
 export const actionChangeStrokeStyle = register<
   ExcalidrawElement["strokeStyle"]
 >({

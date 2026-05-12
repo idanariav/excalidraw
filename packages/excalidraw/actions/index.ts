@@ -16,6 +16,7 @@ export {
   actionChangeFillStyle,
   actionChangeGradientColor, //zsviczian
   actionChangeSloppiness,
+  actionChangeFreeDrawSmoothness, //zsviczian
   actionChangeOpacity,
   actionChangeFontSize,
   actionChangeFontFamily,

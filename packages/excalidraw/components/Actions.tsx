@@ -220,7 +220,7 @@ export const SelectedShapeActions = ({
         targetElements.some((element) => element.type === "freedraw")) && ( //zsviczian
         <> {/* //zsviczian */}
           {renderAction("changeStrokeShape")}
-          {renderAction("changeSloppiness")} {/* //zsviczian */}
+          {renderAction("changeFreeDrawSmoothness")} {/* //zsviczian */}
         </>
       )}
 

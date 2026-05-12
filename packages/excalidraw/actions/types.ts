@@ -71,6 +71,7 @@ export type ActionName =
   | "changeStrokeWidth"
   | "changeStrokeShape"
   | "changeSloppiness"
+  | "changeFreeDrawSmoothness" //zsviczian
   | "changeStrokeStyle"
   | "changeArrowhead"
   | "changeArrowType"
